@@ -3,16 +3,20 @@
 # @Author: kingofwolf
 # @Date:   2018-11-20 18:34:53
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2018-11-26 17:52:12
+# @Last Modified time: 2018-12-02 14:31:41
 # @Email:	wangshengling@buaa.edu.cn
 'Info: a Python file '
 __author__ = 'Wang'
+#ignore the DeprecationWarning of Using or importing the ABCs from 'collections' instead of from 'collections.abc' is deprecated, and in 3.8 it will stop working
+import warnings
+warnings.filterwarnings("ignore")
 
 from collections import Iterable
 from multiprocessing import Pool
 from GreedMap import GreedMap
 import sys, getopt
 import logging
+import functools
 logging.basicConfig(level=logging.INFO,
 					format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
 					datefmt='%a, %d %b %Y %H:%M:%S',
@@ -155,18 +159,18 @@ class TaskList(object):
 		return tuple(Tlist)
 	def BFS_DFS(self,TG):
 		Tlist=[]
-		searched=[]
+		#searched=[]
 		def DFS(nextT):
 			for ext in TG.getadj(nextT):	#BFS
-				if ext in searched:
+				if ext in Tlist:
 					continue
 				else:
-					searched.append(ext)
+					Tlist.append(ext)
 					DFS(ext)
-					Tlist.append(ext)		#DFS
-		searched.append(0)
-		DFS(0)
+					#Tlist.append(ext)		#DFS
 		Tlist.append(0)
+		DFS(0)
+		#Tlist.append(0)
 		return tuple(Tlist)
 	def GPART(self,TG):
 		Tlist=[]
@@ -234,11 +238,13 @@ def Loads(Gt,Gn,S):
 			loadlist[tnode]+=weight
 	return loadlist
 
-def cost_function(Gt,Gn,S,task):
+def cost_function(Gt,Gn,S,task,mode=0):
 	#caculate the hopbytes of each task in tasklist
 	hopbyteslist=Hopbytes(Gt,Gn,S)
 	hopbytes=hopbyteslist[list(map(lambda x:x[0],hopbyteslist)).index(task)][1]
+	if mode==0: return hopbytes
 	maxhopbytes=sorted(hopbyteslist,key=lambda x:x[1],reverse=True)[0][1]
+	if mode==1: return maxhopbytes
 
 	#caculate the load of each node, because the property of fat-tree net struct
 	#this only useful for fat-tree
@@ -246,10 +252,9 @@ def cost_function(Gt,Gn,S,task):
 	maxload=sorted(loadlist,reverse=True)[0]
 
 	# the cost of S
-	#?????????????????
-	return hopbytes+maxload
+	return maxload
 
-def default_compare(Gt,Gn,Slist,a=1):
+def default_compare(Gt,Gn,Slist,alf=10):
 	clist=[]
 	#for each S in Slist, caculate their average hopbytes and max hopbytes
 	for S in Slist:
@@ -259,30 +264,66 @@ def default_compare(Gt,Gn,Slist,a=1):
 		clist.append((ave_hopbytes,max_hopbytes))
 	ave_h0=sorted(clist,key=lambda x:x[0])[0]	#h0:sorted by average hopbytes
 	sort_clist=sorted(clist,key=lambda x:x[1])	#sorted by max hopbytes
-	return Slist[clist.index(sort_clist[0])]
+	expect_result=Slist[clist.index(sort_clist[0])]
+	if sort_clist[0][0]<alf*ave_h0[0]:
+		return expect_result
+	else:
+		logger.info("Slist:\n"+str(expect_result)+"\ndo not find a Pareto result with alf="+str(alf))
+		return []
 
-def ParMapper(Gt,Gn,TList,process=10,strategy=default_compare):
+def S2ST(S):
+	ST=[-1 for i in S if i>=0]
+	for i in range(len(S)):
+		if S[i]>=0:
+			ST[S[i]]=i
+	return ST
+def helpmsg():
+	print("usage:python ParMapper -t <taskgraph file> --tsize <task number> -n <netgraph file> --nnode <node number> --ncore <core number>")
+	print("      the Default setting will be <taskgraph file>:CloverLeaf128ProcessTopology_Volume.lgl")
+	print("                                  <task number>:128")
+	print("                                  <netgraph file>:MapGraph.txt")
+	print("                                  <node number>:48  <core number>:24")
+
+def ParMapper(Gt,Gn,TList,process=10,strategy=default_compare,compare_alf=10,cost_function_mode=0):
 	pool=Pool(process)
 	configures=[]
 	pool_result=[]
 	Slist=[]
+	if cost_function_mode==0:
+		use_cost_function=cost_function
+	elif cost_function_mode==1:
+		use_cost_function=functools.partial(cost_function,mode=1)
+	else:
+		use_cost_function=functools.partial(cost_function,mode=2)
+
 	#GreedMap(Gt,Gn,T,packNodeFirst,cost_function)
 	for T in TList:
-		configures.append((Gt,Gn,Tlist,True,cost_function))
-		configures.append((Gt,Gn,Tlist,False,cost_function))
+		if T==():
+			continue
+		configures.append((Gt,Gn,T,True,use_cost_function))
+		configures.append((Gt,Gn,T,False,use_cost_function))
 	for i in range(process):
 		pool_result.append(pool.apply_async(GreedMap,args=configures[i%len(configures)]))
-	p.close()
-	p.join()
+	pool.close()
+	pool.join()
 	for pr in pool_result:
 		Slist.append(pr.get())
-	S=strategy(Gt,Gn,Slist)
+	S=strategy(Gt,Gn,Slist,alf=compare_alf)
 	return S
+
+def main(Gt,Gn,T,savefile):
+	#GreedMap(Gt,Gn,T,packNodeFirst,cost_function)
+	result_S=ParMapper(Gt,Gn,T,process=2,strategy=default_compare,compare_alf=10,cost_function_mode=0)
+	print("result_S:"+str(S2ST(result_S)))
+	with open(savefile,'w') as sf:
+		for s in S2ST(result_S):
+			sf.write(str(s)+'\n')
 
 if __name__ == '__main__':
 	#bash args
-	opts, args = getopt.getopt(sys.argv[1:], "t:n:",["debug","tsize=", "nnode=", "ncore="])
+	opts, args = getopt.getopt(sys.argv[1:], "ht:n:",["debug","tsize=", "nnode=", "ncore="])
 	debug_mode=False
+	logger.setLevel(logging.INFO)
 	#initialize 
 	task_file="CloverLeaf128ProcessTopology_Volume.lgl"
 	net_file="MapGraph.txt"
@@ -295,6 +336,9 @@ if __name__ == '__main__':
 			task_file = value
 		elif op == "-n":
 			net_file = value
+		elif op == "-h":
+			helpmsg()
+			sys.exit()
 		elif op == "--debug":
 			debug_mode=True
 			logger.setLevel(logging.DEBUG)
@@ -333,5 +377,7 @@ if __name__ == '__main__':
 		T_test=tasklists.T[0]
 		logger.debug("T_test:\n"+str(T_test))
 		S_test=GreedMap(taskgraph,netgraph,T_test,True,cost_function)
-		print(S_test)
-	#GreedMap(Gt,Gn,T,packNodeFirst,cost_function)
+		print("S_test:"+str(S2ST(S_test)))
+	else:
+		savefile=task_file+'.'+net_file
+		main(taskgraph,netgraph,tasklists.T,savefile)
