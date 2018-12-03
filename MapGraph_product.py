@@ -2,22 +2,13 @@
 # -*- coding: utf-8 -*-
 # @Author: kingofwolf
 # @Date:   2018-11-20 18:35:41
-# @Last Modified by:   kingofwolf
-# @Last Modified time: 2018-11-21 15:50:01
+# @Last Modified by:   King-ofwolf
+# @Last Modified time: 2018-12-03 15:35:46
 # @Email:	wangshengling@buaa.edu.cn
 'Info: a Python file '
 __author__ = 'Wang'
 
-class Test(object):
-	"""docstring for Test"""
-	def __init__(self, arg):
-		super(Test, self).__init__()
-		print('hello:',arg)
-		self.__printmy()
-	def __printmy(self):
-		print('hello')
-
-if __name__ == '__main__':
+def MapGraph_product():
 	with open('text.txt','w') as f:
 		mylist=[0 for i in range(48)]
 		for k in range(24):
@@ -49,3 +40,26 @@ if __name__ == '__main__':
 				f.write(str(mylist[i])+' ')
 			f.write('\n')
 
+def MapGraph_product2(IOstream,tcsize,nsize,csize,outfile):
+	with open(outfile,'w') as f:
+		numline=-1
+		for lines in IOstream:
+			numline+=1
+			if numline%csize!=0:
+				continue
+			for i in lines.strip().split()[::csize]:
+				tmp=int(i.split('.').pop())
+				if tmp==1:
+					tmp=0
+				f.write(str(tmp)+' ')
+			f.write('\n')
+			
+
+if __name__ == '__main__':
+	inputfile=input("file:")
+	tcsize=int(input("number of cores:"))
+	nsize=int(input("number of nodes:"))
+	csize=int(input("number of cores in each nodes:"))
+	outfile=inputfile+'-'+str(nsize)+'-'+str(csize)+'.txt'
+	with open(inputfile,'r') as f:
+		MapGraph_product2(f,tcsize,nsize,csize,outfile)

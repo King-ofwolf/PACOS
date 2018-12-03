@@ -105,3 +105,4 @@ venv.bak/
 
 # debug_log
 debug_log/
+*.txt

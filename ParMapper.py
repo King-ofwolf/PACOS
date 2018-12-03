@@ -2,11 +2,37 @@
 # -*- coding: utf-8 -*-
 # @Author: kingofwolf
 # @Date:   2018-11-20 18:34:53
-# @Last Modified by:   kingofwolf
-# @Last Modified time: 2018-12-02 14:31:41
+# @Last Modified by:   King-ofwolf
+# @Last Modified time: 2018-12-03 17:29:51
 # @Email:	wangshengling@buaa.edu.cn
 'Info: a Python file '
 __author__ = 'Wang'
+
+TASK_FILE_MODE=1
+# when this equals 0:
+#task file like:
+# # 0
+# 1 1774760
+# 8 3413000
+# # 1
+# 0 1774760
+# 2 1774760
+# 9 3413000
+# whi this equals 1:
+#task file like:
+# 128 232 001
+# 2 1774760 9 3413000 
+# 1 1774760 3 1774760 10 3413000 
+# 2 1774760 4 1774760 11 3413000 
+
+COMPARE_ALF=10
+
+COST_FUNCTION_MODE=0
+# 0 for hopbytes compare
+# 1 for max hopbytes compare
+# 2 for max load compare 
+
+
 #ignore the DeprecationWarning of Using or importing the ABCs from 'collections' instead of from 'collections.abc' is deprecated, and in 3.8 it will stop working
 import warnings
 warnings.filterwarnings("ignore")
@@ -26,8 +52,10 @@ logger=logging.getLogger()
 
 class TaskGraph(object):
 	"""docstring for TaskGraph"""
-	def __init__(self, IOstream, size):
+	def __init__(self):
 		super(TaskGraph, self).__init__()
+
+	def readgraphfile0(self, IOstream, size):
 		TGlist=[0 for i in range(self.__locat(size-1,size-1)+1)]	#initial TGlist
 		TGadj_matrix=[[] for i in range(size)]
 		self.__size=size
@@ -45,6 +73,27 @@ class TaskGraph(object):
 				raise
 			finally:
 				pass
+		self.__TGadj_matrix=TGadj_matrix
+		self.__TGmatrix=tuple(TGlist)
+		logger.info("TaskGraph initial done:size %d"%self.__size)
+		logger.debug("TaskGraph:\n"+str(self))
+
+
+	def readgraphfile1(self, IOstream):
+		(size,nedges,fmt)=IOstream.readline().strip().split()
+		(size,nedges,fmt)=(int(size),int(nedges),int(fmt))
+		self.__size=size
+		TGlist=[0 for i in range(self.__locat(size-1,size-1)+1)]	#initial TGlist
+		TGadj_matrix=[[] for i in range(size)]
+		ptask=-1
+		for lines in IOstream:
+			ptask+=1
+			lines_tmp=lines.strip().split()
+			for i in range(0,len(lines_tmp),2):
+				qtask=int(lines_tmp[i])-1
+				weight=int(lines_tmp[i+1])
+				TGlist[self.__locat(ptask,qtask)]=weight
+				TGadj_matrix[ptask].append(qtask)
 		self.__TGadj_matrix=TGadj_matrix
 		self.__TGmatrix=tuple(TGlist)
 		logger.info("TaskGraph initial done:size %d"%self.__size)
@@ -86,12 +135,13 @@ class TaskGraph(object):
 
 class NetGraph(object):
 	"""docstring for NetGraph"""
-	def __init__(self, IOstream, node_size, core_size):
+	def __init__(self, IOstream, ct_size, node_size, core_size):
 		super(NetGraph, self).__init__()
 		NGlist=[]
 		item=[]
 		self.__node_size=node_size
 		self.__core_size=core_size
+		self.__ct_size=ct_size
 		if isinstance(IOstream,Iterable) & ('read' in dir(IOstream)):
 			try:
 				for lines in IOstream:
@@ -101,7 +151,7 @@ class NetGraph(object):
 			finally:
 				pass
 		self.__NGmatrix=tuple(NGlist)
-		logger.info("NetGraph initial done: node_size:%d,core_size:%d"%(self.__node_size,self.__core_size))
+		logger.info("NetGraph initial done: ct_size:%d,node_size:%d,core_size:%d"%(self.__ct_size,self.__node_size,self.__core_size))
 		logger.debug("NetGraph:\n"+str(self))
 
 	def getnodedistance(self,i,j):
@@ -114,9 +164,15 @@ class NetGraph(object):
 			raise ValueError("i,j is out of exception")
 
 	def getnodeoder(self,coreoder):
+		if coreoder>=self.__ct_size:
+			raise OverflowError("coreoder:%d is overflow above:%d"%(coreoder,self.__ct_size))
 		return int(coreoder/self.__core_size)
 	def getnodecore(self,nodeoder):
-		return [i for i in range(nodeoder*self.core_size,(nodeoder+1)*self.core_size)]
+		begin=nodeoder*self.__core_size
+		end=(nodeoder+1)*self.core_size
+		if end>self.__ct_size:
+			end=self.__ct_size
+		return [i for i in range(begin,end)]
 
 	def __str__(self):
 		netstr=""
@@ -130,6 +186,9 @@ class NetGraph(object):
 	@property
 	def core_size(self):
 		return self.__core_size
+	@property
+	def ct_size(self):
+		return self.__ct_size
 
 class TaskList(object):
 	"""docstring for TaskList"""
@@ -278,13 +337,13 @@ def S2ST(S):
 			ST[S[i]]=i
 	return ST
 def helpmsg():
-	print("usage:python ParMapper -t <taskgraph file> --tsize <task number> -n <netgraph file> --nnode <node number> --ncore <core number>")
+	print("usage:python ParMapper -t <taskgraph file> --tsize <task number> -n <netgraph file> --ct <core total number> --nnode <node number> --ncore <core number>")
 	print("      the Default setting will be <taskgraph file>:CloverLeaf128ProcessTopology_Volume.lgl")
 	print("                                  <task number>:128")
 	print("                                  <netgraph file>:MapGraph.txt")
 	print("                                  <node number>:48  <core number>:24")
 
-def ParMapper(Gt,Gn,TList,process=10,strategy=default_compare,compare_alf=10,cost_function_mode=0):
+def ParMapper(Gt,Gn,TList,process=4,strategy=default_compare,compare_alf=10,cost_function_mode=0):
 	pool=Pool(process)
 	configures=[]
 	pool_result=[]
@@ -313,7 +372,7 @@ def ParMapper(Gt,Gn,TList,process=10,strategy=default_compare,compare_alf=10,cos
 
 def main(Gt,Gn,T,savefile):
 	#GreedMap(Gt,Gn,T,packNodeFirst,cost_function)
-	result_S=ParMapper(Gt,Gn,T,process=2,strategy=default_compare,compare_alf=10,cost_function_mode=0)
+	result_S=ParMapper(Gt,Gn,T,process=4,strategy=default_compare,compare_alf=COMPARE_ALF,cost_function_mode=COST_FUNCTION_MODE)
 	print("result_S:"+str(S2ST(result_S)))
 	with open(savefile,'w') as sf:
 		for s in S2ST(result_S):
@@ -321,7 +380,7 @@ def main(Gt,Gn,T,savefile):
 
 if __name__ == '__main__':
 	#bash args
-	opts, args = getopt.getopt(sys.argv[1:], "ht:n:",["debug","tsize=", "nnode=", "ncore="])
+	opts, args = getopt.getopt(sys.argv[1:], "ht:n:",["debug","tsize=", "nnode=", "ncore=", "ct="])
 	debug_mode=False
 	logger.setLevel(logging.INFO)
 	#initialize 
@@ -330,6 +389,7 @@ if __name__ == '__main__':
 	task_size=128
 	net_node=48
 	net_core=24
+	net_ct=48*24
 	#choose option
 	for op, value in opts:
 		if op == "-t":
@@ -344,17 +404,21 @@ if __name__ == '__main__':
 			logger.setLevel(logging.DEBUG)
 		elif op == "--tsize":
 			task_size = int(value)
+		elif op == "--ct":
+			net_ct = int(value)
 		elif op == "--nnode":
 			net_node = int(value)
 		elif op == "--ncore":
 			net_core = int(value)
 
 	logger.info("task_file:%s,task_size:%d"%(task_file,task_size))
-	logger.info("net_file:%s,net_node:%d,net_core:%d"%(net_file,net_node,net_core))
+	logger.info("net_file:%s,net_ct:%d,net_node:%d,net_core:%d"%(net_file,net_ct,net_node,net_core))
 	#read task graph file
 	try:
 		with open(task_file,'r') as tgf:
-			taskgraph=TaskGraph(tgf,task_size)
+			taskgraph=TaskGraph()
+			#taskgraph.readgraphfile0(tgf,task_size)
+			taskgraph.readgraphfile1(tgf)
 	except Exception as e:
 		print("task graph read error")
 		raise
@@ -363,7 +427,7 @@ if __name__ == '__main__':
 	#read net graph file
 	try:
 		with open(net_file,'r') as ngf:
-			netgraph=NetGraph(ngf,net_node,net_core)
+			netgraph=NetGraph(ngf,net_ct,net_node,net_core)
 	except Exception as e:
 		print("net graph read error")
 		raise
@@ -376,8 +440,9 @@ if __name__ == '__main__':
 	if debug_mode:
 		T_test=tasklists.T[0]
 		logger.debug("T_test:\n"+str(T_test))
-		S_test=GreedMap(taskgraph,netgraph,T_test,True,cost_function)
+		S_test=GreedMap(taskgraph,netgraph,T_test,False,cost_function)
+		logger.debug("S_test:"+str(S_test))
 		print("S_test:"+str(S2ST(S_test)))
 	else:
-		savefile=task_file+'.'+net_file
+		savefile=task_file+'.'+net_file.split("/").pop()
 		main(taskgraph,netgraph,tasklists.T,savefile)
