@@ -103,5 +103,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+#sublime-project
+*.sublime-project
+*.sublime-workspace
 # debug_log
 debug_log/
+test/
