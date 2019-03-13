@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-02 16:54:15
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-03 16:24:50
+# @Last Modified time: 2019-03-10 16:28:59
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -33,7 +33,9 @@ Form.pushButton_openfile_2.clicked.connect(File_Browser2.opendialog)
 #open button in line 3 bind to file browser and line edit 3
 File_Browser3=Open_File_Browser(Form.lineEdit_filein_3)
 Form.pushButton_openfile_3.clicked.connect(File_Browser3.opendialog)
-
+Form.lineEdit_filein_3.setText("hello world")
+print(Form.lineEdit_filein_3.text())
+Form.lineEdit_filein_1.setValidator(QtGui.QIntValidator())
 
 windows.show()
 app.exec_()

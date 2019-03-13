@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: kingofwolf
 # @Date:   2018-11-20 18:34:53
-# @Last Modified by:   King-ofwolf
-# @Last Modified time: 2018-12-03 17:29:51
+# @Last Modified by:   kingofwolf
+# @Last Modified time: 2019-03-10 14:53:07
 # @Email:	wangshengling@buaa.edu.cn
 'Info: a Python file '
 __author__ = 'Wang'
@@ -192,7 +192,7 @@ class NetGraph(object):
 
 class TaskList(object):
 	"""docstring for TaskList"""
-	def __init__(self,TG,*,files=[]):
+	def __init__(self,TG,files=[]):
 		super(TaskList, self).__init__()
 		self.__T=[]
 		self.__T.append(self.OO(TG))
