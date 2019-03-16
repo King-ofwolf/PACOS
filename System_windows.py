@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 15:25:06
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-12 17:23:10
+# @Last Modified time: 2019-03-13 14:52:50
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -67,7 +67,7 @@ class MsgBox_Window(QtGui.QWidget):
 		
 
 class Open_File_Browser(QtCore.QObject):
-	"""docstring for Open_File_Browser"""
+	"""A window to let user to choose a file from path and return the file path"""
 	setFilepath=QtCore.Signal(str)
 	def __init__(self,parent,lineEdit):
 		super(Open_File_Browser, self).__init__()
@@ -76,14 +76,14 @@ class Open_File_Browser(QtCore.QObject):
 		self.setFilepath.connect(self.setlineEdit)
 		self.parent=parent
 
-
+	#save the file path which user choose
 	@property
 	def last_filepath(self):
 		return self._last_filepath
 	@last_filepath.setter
 	def last_filepath(self,new_filepath):
 		self._last_filepath=new_filepath
-		self.setFilepath.emit(new_filepath)
+		self.setFilepath.emit(new_filepath) #once the file path changed, changed the lineEdit
 	
 	@QtCore.Slot(str)
 	def setlineEdit(self,new_filepath):
@@ -102,6 +102,7 @@ class Open_File_Analysis(QtCore.QObject):
 		self._lineEdit=lineEdit
 		self._textEdit=textEdit
 		self.order=order
+		self.filetype=''
 		self.retype=0
 		self.retmodule=None
 		self.parent=parent
@@ -111,6 +112,16 @@ class Open_File_Analysis(QtCore.QObject):
 			return True
 		else:
 			return False
+
+	def get_file_type(self):
+		if self.order == 1:
+			self.filetype=self.parent.comboBox_tgfiletype.currentText()
+		else self.order == 2:
+			self.filetype=self.parent.comboBox_ngfiletype.currentText()
+		else self.order == 3:
+			self.filetype='.'
+		if self.filetype == '':
+			msgwindow.msg="no file type selected!"
 
 	@QtCore.Slot()
 	def file_analysis(self):

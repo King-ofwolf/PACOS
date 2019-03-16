@@ -162,17 +162,12 @@
           </property>
           <item>
            <property name="text">
-            <string>.tgt</string>
+            <string>.APHiD</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>.xml</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>.txt</string>
+            <string>.mat</string>
            </property>
           </item>
          </widget>
@@ -366,7 +361,17 @@
           </property>
           <item>
            <property name="text">
-            <string>.APHiD</string>
+            <string>.tgt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>.xml</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>.txt</string>
            </property>
           </item>
          </widget>

@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 20:32:56
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-10 22:01:45
+# @Last Modified time: 2019-03-13 14:04:41
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -14,7 +14,13 @@ from TopoMapping import ParMapper
 
 PARMAPPER=1
 TREEMATCH=2
-	
+MPIPP=3
+ParMapper_TgFT = (".APHiD",)
+ParMapper_NgFT = (".txt",)
+TreeMatch_TgFT = (".mat",)
+TreeMatch_NgFT = (".tgf",)
+MPIPP_TgFT = (".mat",".APHiD")
+MPIPP_NgFT = (".tgf",)
 
 def Load_task_graph(filepath,filetype,algotype):
 	if algotype==PARMAPPER:
