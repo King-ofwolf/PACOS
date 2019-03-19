@@ -102,7 +102,7 @@
       <item row="4" column="1">
        <widget class="QLabel" name="label_cf_5">
         <property name="text">
-         <string> 参数2</string>
+         <string>option2</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -164,7 +164,7 @@
       <item row="3" column="1">
        <widget class="QLabel" name="label_cf_4">
         <property name="text">
-         <string>参数1</string>
+         <string>option1</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

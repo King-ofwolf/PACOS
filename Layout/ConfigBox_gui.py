@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Config_Box.ui'
+# Form implementation generated from reading ui file 'ConfigBox_gui.ui'
 #
-# Created: Tue Mar 12 17:14:27 2019
+# Created: Sun Mar 17 14:06:56 2019
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -105,10 +105,10 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QtGui.QApplication.translate("Form", "网络拓扑配置信息", None, QtGui.QApplication.UnicodeUTF8))
         self.label_cf_1.setText(QtGui.QApplication.translate("Form", "Core总个数:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_cf_5.setText(QtGui.QApplication.translate("Form", " 参数2", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_cf_5.setText(QtGui.QApplication.translate("Form", "option2", None, QtGui.QApplication.UnicodeUTF8))
         self.label_cf_3.setText(QtGui.QApplication.translate("Form", "单节点Core个数:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_cf_2.setText(QtGui.QApplication.translate("Form", "Node总个数:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_cf_4.setText(QtGui.QApplication.translate("Form", "参数1", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_cf_4.setText(QtGui.QApplication.translate("Form", "option1", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_cancel.setText(QtGui.QApplication.translate("Form", "取消", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_ensure.setText(QtGui.QApplication.translate("Form", "确定", None, QtGui.QApplication.UnicodeUTF8))
 

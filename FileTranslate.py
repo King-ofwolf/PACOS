@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-14 16:13:29
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-16 20:58:35
+# @Last Modified time: 2019-03-18 20:04:50
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -103,6 +103,26 @@ class TgMatrix(object):
 		finally:
 			pass
 
+	def print_file_MPIPP(self,file_path='./'):
+		if os.path.exists(file_path) & os.path.isdir(file_path) & os.access(file_path,os.W_OK):
+			file_path+="ProcessCommTrace_"+str(self._Tnum)+".MPIPP"
+		else:
+			print "output file path",file_path,"is not an enable dir"
+			return None
+
+		try:
+			with open(file_path,'w') as matfile:
+				for i in range(self._Tnum):
+					for j in range(self._Tnum):
+						matfile.write(str(self._commMatrix[i][j])+" ")
+					matfile.write("\n")
+		except Exception as e:
+			raise
+		else:
+			pass
+		finally:
+			pass
+
 	def print_file_APHiD(self,file_path='./'):
 		if os.path.exists(file_path) & os.path.isdir(file_path) & os.access(file_path,os.W_OK):
 			file_path+="ProcessCommTrace_"+str(self._Tnum)+".APHiD"
@@ -119,6 +139,49 @@ class TgMatrix(object):
 						if temp != 0:
 							aphidfile.write(str(j)+" "+str(temp)+" ")
 					aphidfile.write("\n")
+		except Exception as e:
+			raise
+		else:
+			pass
+		finally:
+			pass
+
+	def print_file_TOPO(self,file_path='./'):
+		if os.path.exists(file_path) & os.path.isdir(file_path) & os.access(file_path,os.W_OK):
+			file_path+="ProcessCommTrace_"+str(self._Tnum)+".TOPO"
+		else:
+			print "output file path",file_path,"is not an enable dir"
+			return None
+
+		try:
+			with open(file_path,'w') as aphidfile:
+				aphidfile.write(str(self._Tnum)+" "+str(self.genrate_nedges())+" 001\n")
+				for i in range(self._Tnum):
+					for j in range(self._Tnum):
+						temp=self._commMatrix[i][j]
+						if temp != 0:
+							aphidfile.write(str(j)+" "+str(temp)+" ")
+					aphidfile.write("\n")
+		except Exception as e:
+			raise
+		else:
+			pass
+		finally:
+			pass
+
+	def print_file_matrix(self,file_path='./'):
+		if os.path.exists(file_path) & os.path.isdir(file_path) & os.access(file_path,os.W_OK):
+			file_path+="ProcessCommTrace_"+str(self._Tnum)+".matrix"
+		else:
+			print "output file path",file_path,"is not an enable dir"
+			return None
+
+		try:
+			with open(file_path,'w') as matfile:
+				for i in range(self._Tnum):
+					for j in range(self._Tnum):
+						matfile.write(str(self._commMatrix[i][j])+" ")
+					matfile.write("\n")
 		except Exception as e:
 			raise
 		else:
@@ -148,18 +211,38 @@ class TgMatrix(object):
 		
 	
 def helpmsg():
-	print "example: python FileTranslate.py -n 128 -o ./test/ --path ./examples/taskgraph/128/ -MTA"
+	print "example: python FileTranslate.py -n 128 -o ./test/ --path ./examples/taskgraph/128/ -A"
 	print "usage: python FileTranslate.py [option] ... [arg] ..."
 	print "Options and arguments:"
 	print "-h\t: print this help message"
 	print "-n arg\t: the <arg> is the number of the task communication files, default is 128"
-	print "-o arg\t: the <arg> is the direction path of the output files, default is ./"
+	print "-o arg\t: the <arg> is the directory path of the output files, default is ./"
 	print "--path arg\t: the <arg> is the direction path of the task communication files, default is ./"
-	print "-M\t: genrate communication quantity matrix file which type is .mat"
-	print "-T\t: genrate communication rate matrix file which type is .rat"
-	print "-A\t: genrate communication quantity matrix file which type is .APHiD"
+	print "-M\t: genrate communication quantity matrix file which type is .mat and .MPIPP"
+	print "-T\t: genrate communication rate matrix file which type is .TOPO and .APHiD"
+	print "-R\t: genrate communication quantity and rate matrix file which type is .matrix and .rat"
+	print "-A\t: genrate all communication quantity matrix file above"
 		
-
+def main(file_path,file_num,file_out,fmt):
+	tgfiles=TgFiles(file_path)
+	if tgfiles.number != file_num:
+		print "the file number you command is",file_num,",but the file in",file_path,"has",tgfiles.number,"Process files(file name with 'Process')."
+		sys.exit(0)
+	tgmatrix=TgMatrix(file_num)
+	for infile in tgfiles.files:
+		tgmatrix.analysis_file(infile)
+	if fmt[0]:	
+		tgmatrix.print_file_mat(file_out)
+	if fmt[1]:
+		tgmatrix.print_file_MPIPP(file_out)
+	if fmt[2]:
+		tgmatrix.print_file_TOPO(file_out)
+	if fmt[3]:
+		tgmatrix.print_file_APHiD(file_out)
+	if fmt[4]:
+		tgmatrix.print_file_matrix(file_out)
+	if fmt[5]:
+		tgmatrix.print_file_rat(file_out)
 
 if __name__ == '__main__':
 	try:
@@ -176,7 +259,7 @@ if __name__ == '__main__':
 	file_path = "./"
 	file_num = 128
 	file_out = "./"
-	fmt=[False,False,False]
+	fmt=[False,False,False,False,False,False]
 
 	for op, value in opts:
 		if op == '--path':
@@ -194,10 +277,15 @@ if __name__ == '__main__':
 			file_out=value
 		elif op == '-M':
 			fmt[0]=True
-		elif op == '-T':
 			fmt[1]=True
-		elif op == '-A':
+		elif op == '-T':
 			fmt[2]=True
+			fmt[3]=True
+		elif op == '-R':
+			fmt[4]=True
+			fmt[5]=True
+		elif op == '-A':
+			fmt=[True,True,True,True,True,True]
 		else:
 			print "unknow option",op
 			helpmsg()
@@ -205,20 +293,9 @@ if __name__ == '__main__':
 	if opts == []:
 		helpmsg()
 		sys.exit()
-
-	tgfiles=TgFiles(file_path)
-	if tgfiles.number != file_num:
-		print "the file number you command is",file_num,",but the file in",file_path,"has",tgfiles.number,"Process files(file name with 'Process')."
-		sys.exit(0)
-	tgmatrix=TgMatrix(file_num)
-	for infile in tgfiles.files:
-		tgmatrix.analysis_file(infile)
-	if fmt[0]:	
-		tgmatrix.print_file_mat(file_out)
-	if fmt[1]:
-		tgmatrix.print_file_rat(file_out)
-	if fmt[2]:
-		tgmatrix.print_file_APHiD(file_out)
+	main(file_path,file_num,file_out,fmt)
+	
+	
 
 
 

@@ -4,15 +4,8 @@
 #include <float.h>
 #include <ctype.h>
 #include "tm_TIMINGS.h"
-#include "tm_TOPOLOGY.h"
 #include "tm_MAPPING.h"
-
-/* different metrics to evaluate the solution */
-typedef enum{
-  TM_METRIC_SUM_COM  = 1,
-  TM_METRIC_MAX_COM  = 2,
-  TM_METRIC_HOP_BYTE = 3
-} tm_metric_t;
+#include "map_MPIPP.h"
 
 
 typedef struct {
@@ -20,14 +13,6 @@ typedef struct {
   long key;
 } hash_t;
 
-int Net_Node[4]={0,0,0,0};
-char * Net_File;
-typedef enum{
-  NB_CT=0,
-  NB_NODE=1,
-  NB_CORE=2,
-  NB_FLAG=3
-} net_node_index;
 
 int hash_asc(const void* x1,const void* x2)
 {
@@ -311,11 +296,15 @@ void file_2_arch(double **arch)
 void print_sigma(int N, int *sigma, double **comm, double **arch)
 {
   int i;
+  FILE *fpout=NULL;
+  fpout=fopen("MPIPP_Result.ST","w");
   for (i = 0; i < N; i++)
   {
     printf("%d,", sigma[i]);
+    fprintf(fpout, "%d\n", sigma[i]);
   }
   printf("\n");
+  fclose(fpout);
 }
 void print_comm(double **comm, int N)
 {
@@ -389,16 +378,16 @@ void tm_display_other_heuristics(tm_topology_t *topology, tm_affinity_mat_t *aff
    // else 
    print_sigma(N,sigma,comm,arch); 
 
-   CLOCK(time0); 
-   map_MPIPP(topology,5,N,sigma,comm,arch); 
-   CLOCK(time1); 
-   duration=CLOCK_DIFF(time1,time0); 
-   printf("MPIPP-5-D:%f\n",duration); 
-   printf("MPIPP-5: "); 
-   // if (TGT_flag == 1)  
-   //   print_sigma_inv(N,sigma,comm,arch); 
-   // else 
-   print_sigma(N,sigma,comm,arch); 
+   // CLOCK(time0); 
+   // map_MPIPP(topology,5,N,sigma,comm,arch); 
+   // CLOCK(time1); 
+   // duration=CLOCK_DIFF(time1,time0); 
+   // printf("MPIPP-5-D:%f\n",duration); 
+   // printf("MPIPP-5: "); 
+   // // if (TGT_flag == 1)  
+   // //   print_sigma_inv(N,sigma,comm,arch); 
+   // // else 
+   // print_sigma(N,sigma,comm,arch); 
 
   FREE(sigma);
    for (i = 0; i < Nb; i++) FREE(arch[i]);
@@ -530,6 +519,10 @@ int main(int argc, char **argv) {
   tm_file_type_t  arch_file_type = TM_FILE_TYPE_UNDEF;
   tm_metric_t     metric = TM_METRIC_SUM_COM;
   //int             oversub_fact = 1;
+  Net_Node[NB_CT]=0;
+  Net_Node[NB_NODE]=0;
+  Net_Node[NB_CORE]=0;
+  Net_Node[NB_FLAG]=0;
 
   //tm_set_exhaustive_search_flag(0);
   //tm_set_greedy_flag(0);
@@ -616,7 +609,6 @@ int main(int argc, char **argv) {
    }
 
    //tm_set_verbose_level(verbose_level);
-
    return test_mapping(arch_filename, arch_file_type, com_filename, metric);
 
 }

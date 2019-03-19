@@ -5,6 +5,7 @@
   <qresource prefix=".jpg">
     <file>png/4a7ff7d9c3372c03313de625da_560.jpg</file>
   </qresource>
+  <qresource prefix=".html"/>
   <qresource prefix=".png">
     <file>png/settings_284px_1211102_easyicon.net.png</file>
     <file>png/Panda.png</file>

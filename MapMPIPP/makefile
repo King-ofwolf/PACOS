@@ -1,9 +1,9 @@
 objects = map_MPIPP.o tm_TOPOLOGY.o tm_MALLOC.o tm_TIMINGS.o tm_MAPPING.o
-soobjects = map_MPIPP.c tm_MALLOC.c tm_MALLOC.h tm_MAPPING.c tm_MAPPING.h tm_TIMINGS.c tm_TIMINGS.h tm_TOPOLOGY.c tm_TOPOLOGY.h UTHash.h
-all : map_MPIPP map_MPIPP_py.so
+soobjects =MPIPP_C2PY.c map_MPIPP.c map_MPIPP.h tm_MALLOC.c tm_MALLOC.h tm_MAPPING.c tm_MAPPING.h tm_TIMINGS.c tm_TIMINGS.h tm_TOPOLOGY.c tm_TOPOLOGY.h UTHash.h
+all : map_MPIPP MPIPP_C2PY.so
 
-map_MPIPP_py.so : $(soobjects)
-	gcc -o map_MPIPP_py.so -shared -fPIC map_MPIPP.c tm_MALLOC.c tm_MAPPING.c tm_TIMINGS.c tm_TOPOLOGY.c -L/usr/local/lib -lhwloc
+MPIPP_C2PY.so : $(soobjects)
+	gcc -o MPIPP_C2PY.so -shared -fPIC MPIPP_C2PY.c map_MPIPP.c tm_MALLOC.c tm_MAPPING.c tm_TIMINGS.c tm_TOPOLOGY.c -L/usr/local/lib -lhwloc
 
 map_MPIPP : $(objects)
 	gcc -o map_MPIPP $(objects) -L/usr/local/lib -lhwloc

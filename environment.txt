@@ -1,0 +1,8 @@
+GNU Make 4.1
+Python 2.7.12
+pip 19.0.3
+gcc (Ubuntu 5.4.0-6ubuntu1~16.04.11) 5.4.0 20160609
+g++ (Ubuntu 5.4.0-6ubuntu1~16.04.11) 5.4.0 20160609
+lstopo 2.1.0a1-git
+hwloc 1.3
+

@@ -66,6 +66,19 @@
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QLabel" name="label">
@@ -170,6 +183,34 @@
             <string>.mat</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>.txt</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_cf_set1">
+          <property name="minimumSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="sourcefile.qrc">
+            <normaloff>:/.png/png/settings_284px_1211102_easyicon.net.png</normaloff>:/.png/png/settings_284px_1211102_easyicon.net.png</iconset>
+          </property>
          </widget>
         </item>
         <item>
@@ -240,7 +281,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="pushButton_tg_show">
           <property name="minimumSize">
            <size>
             <width>30</width>
@@ -361,6 +402,11 @@
           </property>
           <item>
            <property name="text">
+            <string>.txt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>.tgt</string>
            </property>
           </item>
@@ -369,15 +415,10 @@
             <string>.xml</string>
            </property>
           </item>
-          <item>
-           <property name="text">
-            <string>.txt</string>
-           </property>
-          </item>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="pushButton_cf_set2">
           <property name="minimumSize">
            <size>
             <width>30</width>
@@ -467,7 +508,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_3">
+         <widget class="QPushButton" name="pushButton_ng_show">
           <property name="minimumSize">
            <size>
             <width>30</width>
@@ -658,6 +699,19 @@
        </layout>
       </item>
       <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
          <widget class="QLabel" name="label_9">
@@ -756,6 +810,19 @@
            <string>配置选项1</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_algorithm_match">

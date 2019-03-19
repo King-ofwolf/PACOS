@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2018-11-20 18:34:53
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-10 14:53:07
+# @Last Modified time: 2019-03-18 20:05:08
 # @Email:	wangshengling@buaa.edu.cn
 'Info: a Python file '
 __author__ = 'Wang'
@@ -43,12 +43,21 @@ from GreedMap import GreedMap
 import sys, getopt
 import logging
 import functools
+
+# logger = logging.getLogger("System.ParMapper")
+# logger.setLevel(level = logging.INFO)
+# LogHandler = logging.FileHandler("ParMapper.log")
+# handler.setLevel(logging.INFO)
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# handler.setFormatter(formatter)
+# logger.addHandler(handler)
+
 logging.basicConfig(level=logging.INFO,
 					format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
 					datefmt='%a, %d %b %Y %H:%M:%S',
-					filename='ParMapper.log',
+					filename="ParMapper.log",
 					filemode='w')
-logger=logging.getLogger()
+logger=logging.getLogger("System.ParMapper")
 
 class TaskGraph(object):
 	"""docstring for TaskGraph"""
@@ -366,17 +375,56 @@ def ParMapper(Gt,Gn,TList,process=4,strategy=default_compare,compare_alf=10,cost
 	pool.close()
 	pool.join()
 	for pr in pool_result:
-		Slist.append(pr.get())
+		if pr.successful():
+			Slist.append(pr.get())
 	S=strategy(Gt,Gn,Slist,alf=compare_alf)
 	return S
 
-def main(Gt,Gn,T,savefile):
+def TopoMapping(Gt,Gn,T,savefile):
 	#GreedMap(Gt,Gn,T,packNodeFirst,cost_function)
 	result_S=ParMapper(Gt,Gn,T,process=4,strategy=default_compare,compare_alf=COMPARE_ALF,cost_function_mode=COST_FUNCTION_MODE)
 	print("result_S:"+str(S2ST(result_S)))
 	with open(savefile,'w') as sf:
 		for s in S2ST(result_S):
 			sf.write(str(s)+'\n')
+	return result_S
+def main(task_file,net_file,task_size,net_ct,net_node,net_core,debug_mode=False,resultfile=''):
+	#read task graph file
+	try:
+		with open(task_file,'r') as tgf:
+			taskgraph=TaskGraph()
+			#taskgraph.readgraphfile0(tgf,task_size)
+			taskgraph.readgraphfile1(tgf)
+	except Exception as e:
+		print("task graph read error")
+		raise
+	finally:
+		pass
+	#read net graph file
+	try:
+		with open(net_file,'r') as ngf:
+			netgraph=NetGraph(ngf,net_ct,net_node,net_core)
+	except Exception as e:
+		print("net graph read error")
+		raise
+	finally:
+		pass
+	#caculate tasklist
+	tasklists=TaskList(taskgraph)
+
+	#debug&test
+	if debug_mode:
+		T_test=tasklists.T[0]
+		logger.debug("T_test:\n"+str(T_test))
+		S_test=GreedMap(taskgraph,netgraph,T_test,False,cost_function)
+		logger.debug("S_test:"+str(S_test))
+		print("S_test:"+str(S2ST(S_test)))
+	else:
+		if resultfile == '':
+			savefile=task_file+'.'+net_file.split("/").pop()
+		else :
+			savefile=resultfile
+		return TopoMapping(taskgraph,netgraph,tasklists.T,savefile)
 
 if __name__ == '__main__':
 	#bash args
@@ -413,36 +461,5 @@ if __name__ == '__main__':
 
 	logger.info("task_file:%s,task_size:%d"%(task_file,task_size))
 	logger.info("net_file:%s,net_ct:%d,net_node:%d,net_core:%d"%(net_file,net_ct,net_node,net_core))
-	#read task graph file
-	try:
-		with open(task_file,'r') as tgf:
-			taskgraph=TaskGraph()
-			#taskgraph.readgraphfile0(tgf,task_size)
-			taskgraph.readgraphfile1(tgf)
-	except Exception as e:
-		print("task graph read error")
-		raise
-	finally:
-		pass
-	#read net graph file
-	try:
-		with open(net_file,'r') as ngf:
-			netgraph=NetGraph(ngf,net_ct,net_node,net_core)
-	except Exception as e:
-		print("net graph read error")
-		raise
-	finally:
-		pass
-	#caculate tasklist
-	tasklists=TaskList(taskgraph)
-
-	#debug&test
-	if debug_mode:
-		T_test=tasklists.T[0]
-		logger.debug("T_test:\n"+str(T_test))
-		S_test=GreedMap(taskgraph,netgraph,T_test,False,cost_function)
-		logger.debug("S_test:"+str(S_test))
-		print("S_test:"+str(S2ST(S_test)))
-	else:
-		savefile=task_file+'.'+net_file.split("/").pop()
-		main(taskgraph,netgraph,tasklists.T,savefile)
+	main(task_file,net_file,task_size,net_ct,net_node,net_core,debug_mode)
+	
