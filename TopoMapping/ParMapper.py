@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2018-11-20 18:34:53
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-18 20:05:08
+# @Last Modified time: 2019-03-21 10:45:17
 # @Email:	wangshengling@buaa.edu.cn
 'Info: a Python file '
 __author__ = 'Wang'
@@ -138,6 +138,10 @@ class TaskGraph(object):
 	@property
 	def size(self):
 		return self.__size
+
+	@property
+	def TGmatrix(self):
+		return [[self.getweight(i,j) for j in range(self.__size)] for i in range(self.__size)]
 
 	def getlist(self):
 		return [i for i in range(self.__size)]

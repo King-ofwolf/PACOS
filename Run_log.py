@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-17 10:59:54
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-17 14:39:13
+# @Last Modified time: 2019-03-21 10:29:28
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -11,6 +11,9 @@ __version__= '2019-03-17 10:59:54'
 
 import logging
 import os
+
+LOG_DEBUG=logging.DEBUG
+LOG_INFO=logging.INFO
 
 SYSWORD_DIR=os.getcwd()
 RUNLOG_DIR=os.path.join(SYSWORD_DIR,"debug_log/")
@@ -21,4 +24,3 @@ logging.basicConfig(level=logging.INFO,
 					filename=LOG_FILE,
 					filemode='w')
 Sys_logger=logging.getLogger("System")
-

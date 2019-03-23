@@ -752,6 +752,9 @@
           <property name="text">
            <string>配置选项1</string>
           </property>
+          <property name="autoExclusive">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -770,6 +773,9 @@
           </property>
           <property name="text">
            <string>配置选项1</string>
+          </property>
+          <property name="autoExclusive">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -790,6 +796,9 @@
           <property name="text">
            <string>配置选项1</string>
           </property>
+          <property name="autoExclusive">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -808,6 +817,9 @@
           </property>
           <property name="text">
            <string>配置选项1</string>
+          </property>
+          <property name="autoExclusive">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -993,6 +1005,9 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="text">
          <string>算法1</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
