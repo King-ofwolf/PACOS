@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 15:25:06
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-23 22:11:59
+# @Last Modified time: 2019-03-31 18:44:38
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -12,6 +12,7 @@ __version__= '2019-03-10 15:25:06'
 import sys
 import os
 import subprocess
+import traceback
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import QtWebKit
@@ -30,7 +31,7 @@ QtCore.Signal = QtCore.pyqtSignal
 QtCore.Slot = QtCore.pyqtSlot
 
 class MsgBox_Window(QtGui.QWidget):
-	"""docstring for MsgBox_Window"""
+	"""A message window that can hold a String type of message to show in a private window when _msg changed to the message"""
 	def __init__(self,parent):
 		super(MsgBox_Window, self).__init__()
 		self.parent=parent
@@ -38,6 +39,7 @@ class MsgBox_Window(QtGui.QWidget):
 		self.center()
 		self.button_binding()
 		self._msg="message info"
+		self._exception=None
 
 	def paint_UI(self):
 		self.qt_ui=MsgBox_gui.Ui_Dialog()
@@ -49,36 +51,49 @@ class MsgBox_Window(QtGui.QWidget):
 		self.move(qr.topLeft())
 
 	def button_binding(self):
+		#ok button binding with close the window
 		self.qt_ui.pushButton.clicked.connect(self.topclose)
 
 	@property
 	def msg(self):
 		return self._msg
+	#_msg's setter, whenever the _msg changed, close the parent window and show message window with that message
 	@msg.setter
 	def msg(self,msgstr):
 		self._msg=msgstr
+		if self._exception!=None:
+			msgstr+="\nDetails:\n"+str(traceback.format_exc())
 		self.qt_ui.textBrowser.setText(msgstr)
 		self.parent.setVisible(False)
 		self.show()
 		#self.activateWindow()
+	# a slot that can be bind to close the window and show the parent window
 	@QtCore.Slot()
 	def topclose(self):
 		self.close()
+		self._init()
 		self.parent.setVisible(True)
 
+	def _init(self):
+		self._msg="message info"
+		self._exception=None
+	@property
+	def exception(self):
+		return self._exception
+	@exception.setter
+	def exception(self,msgexception):
+		self._exception=msgexception
+	
+
 class ConfigBox_Window(QtGui.QWidget):
-	"""docstring for ConfigBox_Window"""
+	"""ConfigBox Window"""
 	def __init__(self,parent):
 		super(ConfigBox_Window, self).__init__()
 		self.parent=parent
 		self.paint_UI()
 		self.center()
 		self.button_binding()
-		self._opt1=0
-		self._opt2=0
-		self._opt3=0
-		self._opt4=0
-		self._opt5=0
+		self._options=[0,0,0,0,0]
 		self._windows=0
 
 	def paint_UI(self):
@@ -101,43 +116,34 @@ class ConfigBox_Window(QtGui.QWidget):
 		self._windows=wtype
 
 	def getopt(self):
-		return [self._opt1,self._opt2,self._opt3,self._opt4,self._opt5]
+		return self._options
+
+	def set_option_visible(self,options):
+		self.qt_ui.label_cf_1.setVisible(options[0])
+		self.qt_ui.label_cf_2.setVisible(options[1])
+		self.qt_ui.label_cf_3.setVisible(options[2])
+		self.qt_ui.label_cf_4.setVisible(options[3])
+		self.qt_ui.label_cf_5.setVisible(options[4])
+		self.qt_ui.lineEdit_in_1.setVisible(options[0])
+		self.qt_ui.lineEdit_in_2.setVisible(options[1])
+		self.qt_ui.lineEdit_in_3.setVisible(options[2])
+		self.qt_ui.lineEdit_in_4.setVisible(options[3])
+		self.qt_ui.lineEdit_in_5.setVisible(options[4])
 
 	@QtCore.Slot()
 	def Configwindow_show(self):
-		self.qt_ui.lineEdit_in_1.setText(str(self._opt1))
-		self.qt_ui.lineEdit_in_2.setText(str(self._opt2))
-		self.qt_ui.lineEdit_in_3.setText(str(self._opt3))
-		self.qt_ui.lineEdit_in_4.setText(str(self._opt4))
-		self.qt_ui.lineEdit_in_5.setText(str(self._opt5))
-		if self._windows == 0:
-			self.qt_ui.label_cf_2.setVisible(True)
-			self.qt_ui.label_cf_3.setVisible(True)
-			self.qt_ui.lineEdit_in_2.setVisible(True)
-			self.qt_ui.lineEdit_in_3.setVisible(True)
-			self.qt_ui.label_cf_4.setVisible(False)
-			self.qt_ui.label_cf_5.setVisible(False)
-			self.qt_ui.lineEdit_in_4.setVisible(False)
-			self.qt_ui.lineEdit_in_5.setVisible(False)
-		elif self._windows == 1:
+		self.qt_ui.lineEdit_in_1.setText(str(self._options[0]))
+		self.qt_ui.lineEdit_in_2.setText(str(self._options[1]))
+		self.qt_ui.lineEdit_in_3.setText(str(self._options[2]))
+		self.qt_ui.lineEdit_in_4.setText(str(self._options[3]))
+		self.qt_ui.lineEdit_in_5.setText(str(self._options[4]))
+		if self._windows == 0:	#net of .txt config window
+			self.set_option_visible([True,True,True,False,False])
+		elif self._windows == 1:	#task config window
 			self.qt_ui.label_cf_1.setText(Language.STR_TOTAL_TASK_NUM)
-			self.qt_ui.label_cf_2.setVisible(False)
-			self.qt_ui.label_cf_3.setVisible(False)
-			self.qt_ui.label_cf_4.setVisible(False)
-			self.qt_ui.label_cf_5.setVisible(False)
-			self.qt_ui.lineEdit_in_2.setVisible(False)
-			self.qt_ui.lineEdit_in_3.setVisible(False)
-			self.qt_ui.lineEdit_in_4.setVisible(False)
-			self.qt_ui.lineEdit_in_5.setVisible(False)
-		elif self._windows == 2:
-			self.qt_ui.label_cf_2.setVisible(False)
-			self.qt_ui.label_cf_3.setVisible(False)
-			self.qt_ui.label_cf_4.setVisible(False)
-			self.qt_ui.label_cf_5.setVisible(False)
-			self.qt_ui.lineEdit_in_2.setVisible(False)
-			self.qt_ui.lineEdit_in_3.setVisible(False)
-			self.qt_ui.lineEdit_in_4.setVisible(False)
-			self.qt_ui.lineEdit_in_5.setVisible(False)
+			self.set_option_visible([True,False,False,False,False])
+		elif self._windows == 2:	#net of .tgt config window
+			self.set_option_visible([True,False,False,False,False])
 
 		self.parent.setVisible(False)
 		self.show()
@@ -145,12 +151,12 @@ class ConfigBox_Window(QtGui.QWidget):
 
 	@QtCore.Slot()
 	def ensureclose(self):
-		self._opt1=int(self.qt_ui.lineEdit_in_1.text())
-		self._opt2=int(self.qt_ui.lineEdit_in_2.text())
-		self._opt3=int(self.qt_ui.lineEdit_in_3.text())
+		self._options[0]=int(self.qt_ui.lineEdit_in_1.text())
+		self._options[1]=int(self.qt_ui.lineEdit_in_2.text())
+		self._options[2]=int(self.qt_ui.lineEdit_in_3.text())
 		self.close()
 		self.parent.setVisible(True)
-		Sys_logger.info("Configwindow ensure close with option %d %d %d"%(self._opt1,self._opt2,self._opt3))
+		Sys_logger.info("Configwindow ensure close with option %d %d %d"%(self._options[0],self._options[1],self._options[2]))
 	@QtCore.Slot()
 	def cancelclose(self):
 		self.close()
@@ -159,6 +165,7 @@ class ConfigBox_Window(QtGui.QWidget):
 
 class Open_File_Browser(QtCore.QObject):
 	"""A window to let user to choose a file from path and return the file path"""
+	# a signal that whenever the _last_filepath changed, the _lineEdit will be changed too
 	setFilepath=QtCore.Signal(str)
 	def __init__(self,parent,lineEdit):
 		super(Open_File_Browser, self).__init__()
@@ -228,26 +235,29 @@ class Open_File_Analysis(QtCore.QObject):
 			self.get_file_type()
 			task_size=self.parent.Config_Setter1.getopt()[0]
 			if self.order == 1:#file analysis of task graph
-				if self.filetype == '.APHiD':
+				if (self.filetype == '.APHiD') | (self.filetype == '.TOPO'):
 					self.retmodule=Algorithm_manage.Load_task_graph_APHiD(self._lineEdit.text())
 					if self.retmodule != None:
 						if self.retmodule.size != task_size :
 							msgwindow.msg="Task number in Task file is %d, but you set it as %d."%(self.retmodule.size,task_size)
 							retmodule=None
-				elif self.filetype == '.mat':
+				elif (self.filetype == '.mat') | (self.filetype == '.MPIPP'):
 					self.retmodule=Algorithm_manage.Load_task_graph_MAT(self._lineEdit.text())
 					if self.retmodule != None:
 						if len(self.retmodule) != task_size:
 							msgwindow.msg="Task number in Task file is %d, but you set it as %d."%(len(self.retmodule),task_size)
 							retmodule=None
-			elif self.order == 2:#file analysis of task graph
+			elif self.order == 2:#file analysis of net graph
 				if self.filetype == '.txt':
 					[net_ct,net_node,net_core,m,n]=self.parent.Config_Setter2.getopt()
 					self.retmodule=Algorithm_manage.Load_net_graph_txt(self._lineEdit.text(),net_ct,net_node,net_core)
 				elif self.filetype == '.tgt':
 					self.retmodule=Algorithm_manage.Load_net_graph_tgt(self._lineEdit.text())
 				elif self.filetype == '.xml':
-					pass#----------------------------------
+					self.retmodule=Algorithm_manage.Load_net_graph_xml(self._lineEdit.text())
+			elif self.order == 3:
+				if '.bind' in str(self._lineEdit.text()):
+					self.retmodule=True
 			else:
 				self.retmodule=None
 
@@ -331,8 +341,11 @@ class ResultBox_window(QtGui.QWidget):
 		event.accept()
 
 	def setResult(self,Slist,ct=1024):
+		self.qt_ui.listWidget.clear()
 		#data tab
-		item = self.qt_ui.listWidget.item(0).setText(Language.STR_RESULT_MAP)
+		item = QtGui.QListWidgetItem()
+		item.setText(Language.STR_RESULT_MAP)
+		self.qt_ui.listWidget.addItem(item)
 		count=0
 		for s in Slist:
 			item = QtGui.QListWidgetItem()
@@ -343,6 +356,10 @@ class ResultBox_window(QtGui.QWidget):
 
 		#map tab
 		#item = self.qt_ui.listWidget_2.item(0).setText(_translate("Dialog", "", None))
+		self.qt_ui.listWidget_2.clear()
+		item =QtGui.QListWidgetItem()
+		item.setText(Language.STR_RESULT_DATA)
+		self.qt_ui.listWidget_2.addItem(item)
 		Stemp=self.ResultTranslate(Slist,ct)
 		index=0
 		while index<ct:
@@ -356,7 +373,7 @@ class ResultBox_window(QtGui.QWidget):
 			item.setText(strtemp)
 			self.qt_ui.listWidget_2.addItem(item)
 
-
+	#translate the result net to task into task to net (S to ST)
 	def ResultTranslate(self,Slist,ct):
 		count=0
 		Stemp=[-1 for i in range(ct)]
@@ -364,7 +381,6 @@ class ResultBox_window(QtGui.QWidget):
 			Stemp[s]=count
 			count+=1
 		return Stemp
-	
 
 class Algorithm_begin(QtCore.QObject):
 	"""docstring for Algorithm_begin"""
@@ -387,6 +403,7 @@ class Algorithm_begin(QtCore.QObject):
 		self.parent.set_waiting()
 		alg_tgfile=str(self.parent.qt_ui.lineEdit_filein_1.text())
 		alg_ngfile=str(self.parent.qt_ui.lineEdit_filein_2.text())
+		alg_cgfile=str(self.parent.qt_ui.lineEdit_filein_3.text())	#algorithm config file
 		try:
 			task_size=self.parent.Config_Setter1.getopt()[0]
 			[net_ct,net_node,net_core,m,n]=self.parent.Config_Setter2.getopt()
@@ -397,13 +414,20 @@ class Algorithm_begin(QtCore.QObject):
 			elif self.algotype == Algorithm_manage.MPIPP:
 				ngfile_type = self.parent.qt_ui.comboBox_ngfiletype.currentText()
 				self.result=Algorithm_manage.Algorithm_run_MPIPP(alg_tgfile,alg_ngfile,ngfile_type,net_ct,net_node,net_core)
+			elif self.algotype == Algorithm_manage.TREEMATCH:
+				ngfile_type = self.parent.qt_ui.comboBox_ngfiletype.currentText()
+				bind_choose = self.parent.qt_ui.radioButton_config_op2.isChecked()
+				bind_file = alg_cgfile if bind_choose else ''
+				optimization = not self.parent.qt_ui.radioButton_config_op3.isChecked()
+				metric=self.parent.qt_ui.comboBox_metric.currentIndex()+1
+				self.result=Algorithm_manage.Algorithm_run_TREEMATCH(alg_tgfile,alg_ngfile,ngfile_type,bind_file,optimization,metric)
 
 			self.parent.Result_Show.setResult(self.result,net_ct)
 			self.parent.Result_Show.resultshow()
 		except Exception as e:
 			Sys_logger.debug(str(e))
+			msgwindow.exception=e
 			msgwindow.msg=Language.STR_CACULATE_FAILD
-			raise
 		else:
 			pass
 		finally:
@@ -429,12 +453,7 @@ class Main_Window(QtGui.QWidget):
 		self.qt_ui.pushButton_exefile_2.setEnabled(False)
 		self.qt_ui.pushButton_tg_show.setEnabled(False)
 		#line3 file in layout
-		self.qt_ui.label_7.setVisible(False)
-		self.qt_ui.lineEdit_filein_3.setVisible(False)
-		self.qt_ui.pushButton_openfile_3.setVisible(False)
-		self.qt_ui.pushButton_exefile_3.setVisible(False)
-		self.qt_ui.label_8.setVisible(False)
-		self.qt_ui.textEdit_exestate_3.setVisible(False)
+		self.set_line3_file_in_layout(False)
 
 		#algorithm match button 
 		self.qt_ui.pushButton_algorithm_match.setVisible(False)
@@ -449,6 +468,15 @@ class Main_Window(QtGui.QWidget):
 		self.qt_ui.radioButton_config_op2.setVisible(False)
 		self.qt_ui.radioButton_config_op3.setVisible(False)
 		self.qt_ui.radioButton_config_op4.setVisible(False) 
+		self.qt_ui.comboBox_metric.setVisible(False)
+
+	def set_line3_file_in_layout(self,state):
+		self.qt_ui.label_7.setVisible(state)
+		self.qt_ui.lineEdit_filein_3.setVisible(state)
+		self.qt_ui.pushButton_openfile_3.setVisible(state)
+		self.qt_ui.pushButton_exefile_3.setVisible(state)
+		self.qt_ui.label_8.setVisible(state)
+		self.qt_ui.textEdit_exestate_3.setVisible(state)
 
 	def option_setting(self):
 		self.qt_ui.radioButton_config_op1.setText('Debug Mode')
@@ -513,8 +541,16 @@ class Main_Window(QtGui.QWidget):
 		#file analysis done ==> graph show button enabled
 		self.qt_ui.textEdit_exestate_1.textChanged.connect(lambda:self.qt_ui.pushButton_tg_show.setEnabled(True) if self.qt_ui.textEdit_exestate_1.toPlainText() == 'Done' else 0)
 
-		#tgfile type == tgt ==> no config setting
+		#tgfile type == tgt ==> config window changed to type 2
 		self.qt_ui.comboBox_ngfiletype.currentIndexChanged.connect(self.activity_set_tgt)
+
+		#algorithm changed ==> option setter change
+		self.qt_ui.radioButton_algorithm_1.clicked.connect(self.activity_set_Algorithm_TopoMapping)
+		self.qt_ui.radioButton_algorithm_2.clicked.connect(self.activity_set_Algorithm_MPIPP)
+		self.qt_ui.radioButton_algorithm_3.clicked.connect(self.activity_set_Algorithm_TreeMatch)
+
+		#TreeMatch:-b set ==> file 3 input
+		self.qt_ui.radioButton_config_op2.toggled.connect(lambda x:self.set_line3_file_in_layout(x))
 
 	@QtCore.Slot()
 	def activity_set_tgt(self):
@@ -522,6 +558,36 @@ class Main_Window(QtGui.QWidget):
 			self.Config_Setter2.changewindow(2)
 		else:
 			self.Config_Setter2.changewindow(0)
+
+	@QtCore.Slot()
+	def activity_set_Algorithm_TopoMapping(self):
+		self.qt_ui.radioButton_config_op2.setVisible(False)
+		self.qt_ui.radioButton_config_op3.setVisible(False)
+		self.qt_ui.radioButton_config_op4.setVisible(False) 
+		self.qt_ui.comboBox_metric.setVisible(False)
+		self.set_line3_file_in_layout(False)
+	@QtCore.Slot()
+	def activity_set_Algorithm_MPIPP(self):
+		self.qt_ui.radioButton_config_op2.setVisible(False)
+		self.qt_ui.radioButton_config_op3.setVisible(False)
+		self.qt_ui.radioButton_config_op4.setVisible(False) 
+		self.qt_ui.comboBox_metric.setVisible(False)
+		self.set_line3_file_in_layout(False)
+	@QtCore.Slot()
+	def activity_set_Algorithm_TreeMatch(self):
+		self.qt_ui.radioButton_config_op2.setVisible(True)
+		self.qt_ui.radioButton_config_op3.setVisible(True)
+		self.qt_ui.radioButton_config_op4.setVisible(True) 
+		self.qt_ui.comboBox_metric.setVisible(True)
+		self.qt_ui.radioButton_config_op2.setText("-b")
+		self.qt_ui.radioButton_config_op2.setToolTip("binding constraint file")
+		self.qt_ui.radioButton_config_op3.setText("-d")
+		self.qt_ui.radioButton_config_op3.setToolTip("disable topology optimization")
+		self.qt_ui.radioButton_config_op4.setText("-m")
+		self.qt_ui.radioButton_config_op4.setToolTip("evaluation metric")
+		if self.qt_ui.radioButton_config_op2.isChecked:
+			self.set_line3_file_in_layout(True)
+
 
 	def set_waiting(self):
 		self.setCursor(QtCore.Qt.WaitCursor)

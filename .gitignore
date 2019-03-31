@@ -109,3 +109,6 @@ venv.bak/
 # debug_log
 debug_log/
 test/
+
+#result file
+*.ST

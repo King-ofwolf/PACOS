@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-14 16:13:29
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-18 20:04:50
+# @Last Modified time: 2019-03-27 15:32:43
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -209,7 +209,71 @@ class TgMatrix(object):
 		finally:
 			pass
 		
-	
+def Net_File_Translate(file_path,core):
+	if os.path.exists(file_path) & os.path.isfile(file_path) & os.access(file_path,os.R_OK):
+		pass
+	else :
+		print "input file path",file_path,"is not an enable file"
+		return None
+	try:
+		net_matrix=[]
+		with open(file_path,'r') as infile:
+			for line in infile:
+				lines=line.strip().split()
+				lines_matrix=[int(float(i)*1000000) for i in lines]
+				net_matrix.append(lines_matrix[::core])
+
+		file_out_path=file_path+"-"+str(core)
+		with open(file_out_path,'w') as outfile:
+			for line in net_matrix[::core]:
+				for item in line:
+					outfile.write(str(item)+" ")
+				outfile.write("\n")
+				
+	except Exception as e:
+		raise
+	else:
+		pass
+	finally:
+		pass
+
+def Reuslt_File_Translate_TreeMatch(file_path):
+	with open(file_path,'r') as rf:
+		for lines in rf:
+			linesplit=lines.strip().split()
+			if linesplit[0] == 'TreeMatch:':
+				Result=linesplit[1].split(',')
+
+	file_out_path=file_path+".ST"
+	with open(file_out_path,'w') as outfile:
+		for i in Result:
+			outfile.write(str(i)+"\n")
+
+def Layout_File_Translate(file_ST,file_layout):
+	STlist=[]
+	laylist=[]
+	with open(file_ST,'r') as rtf:
+		for lines in rtf:
+			if lines.strip() != "":
+				STlist.append(lines.strip())
+		
+	with open(file_layout,'r') as layf:
+		for lines in layf:
+			if lines.strip() != "":
+				laylist.append(lines.strip())
+
+	for i in range(len(STlist)):
+		STlist[i]=laylist[int(STlist[i])]
+
+	file_out_path=file_layout+"."+os.path.basename(file_ST)
+	with open(file_out_path,'w') as outfile:
+		for i in STlist:
+			outfile.write(str(i)+"\n")
+
+def Get_time_from_app(file_app,file_time):
+	pass
+
+
 def helpmsg():
 	print "example: python FileTranslate.py -n 128 -o ./test/ --path ./examples/taskgraph/128/ -A"
 	print "usage: python FileTranslate.py [option] ... [arg] ..."
@@ -244,9 +308,11 @@ def main(file_path,file_num,file_out,fmt):
 	if fmt[5]:
 		tgmatrix.print_file_rat(file_out)
 
+
+
 if __name__ == '__main__':
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hMTAn:o:",["debug","path="])
+		opts, args = getopt.getopt(sys.argv[1:], "hMTAn:o:",["debug","path=","net=","TR=","ST=","layout=","appfile=","timefile="])
 	except Exception as e:
 		print e
 		helpmsg()
@@ -260,6 +326,10 @@ if __name__ == '__main__':
 	file_num = 128
 	file_out = "./"
 	fmt=[False,False,False,False,False,False]
+	file_net=""
+	file_TR=""
+	file_ST=""
+	file_app=""
 
 	for op, value in opts:
 		if op == '--path':
@@ -286,6 +356,18 @@ if __name__ == '__main__':
 			fmt[5]=True
 		elif op == '-A':
 			fmt=[True,True,True,True,True,True]
+		elif op == '--net':
+			file_net=value
+		elif op == '--TR':
+			file_TR=value
+		elif op == '--ST':
+			file_ST=value
+		elif op == '--layout':
+			file_layout=value
+		elif op == '--appfile':
+			file_app=value
+		elif op == '--timefile':
+			file_time=value
 		else:
 			print "unknow option",op
 			helpmsg()
@@ -293,7 +375,16 @@ if __name__ == '__main__':
 	if opts == []:
 		helpmsg()
 		sys.exit()
-	main(file_path,file_num,file_out,fmt)
+	if file_net != "":
+		Net_File_Translate(file_net,24)
+	elif file_TR != "":
+		Reuslt_File_Translate_TreeMatch(file_TR)
+	elif file_ST != "":
+		Layout_File_Translate(file_ST,file_layout)
+	elif file_app != "":
+		Get_time_from_app(file_app,file_time)
+	else:
+		main(file_path,file_num,file_out,fmt)
 	
 	
 

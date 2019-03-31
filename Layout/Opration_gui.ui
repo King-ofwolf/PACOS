@@ -52,7 +52,7 @@
     <rect>
      <x>30</x>
      <y>20</y>
-     <width>1083</width>
+     <width>1098</width>
      <height>202</height>
     </rect>
    </property>
@@ -821,6 +821,37 @@
           <property name="autoExclusive">
            <bool>false</bool>
           </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_metric">
+          <property name="minimumSize">
+           <size>
+            <width>60</width>
+            <height>27</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>60</width>
+            <height>27</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>SUM_COM</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MAX_COM</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>HOP_BYTE</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item>

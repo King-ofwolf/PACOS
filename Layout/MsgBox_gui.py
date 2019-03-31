@@ -26,6 +26,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName(_fromUtf8("Dialog"))
         Dialog.setWindowModality(QtCore.Qt.NonModal)
+        Dialog.resize(400, 300)
         Dialog.setMinimumSize(QtCore.QSize(400, 300))
         Dialog.setMaximumSize(QtCore.QSize(400, 300))
         Dialog.setFocusPolicy(QtCore.Qt.NoFocus)
@@ -36,6 +37,8 @@ class Ui_Dialog(object):
         self.textBrowser.setGeometry(QtCore.QRect(20, 20, 360, 200))
         self.textBrowser.setMinimumSize(QtCore.QSize(360, 200))
         self.textBrowser.setMaximumSize(QtCore.QSize(360, 200))
+        self.textBrowser.setAutoFormatting(QtGui.QTextEdit.AutoNone)
+        self.textBrowser.setLineWrapMode(QtGui.QTextEdit.NoWrap)
         self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
         self.pushButton = QtGui.QPushButton(Dialog)
         self.pushButton.setGeometry(QtCore.QRect(140, 250, 99, 27))

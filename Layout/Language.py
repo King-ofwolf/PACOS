@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-17 17:13:49
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-23 21:59:46
+# @Last Modified time: 2019-03-24 13:48:43
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -17,6 +17,7 @@ STR_TOTAL_TASK_NUM=QTLanguageTranslate("task总数:")
 STR_CACULATE_FAILD=QTLanguageTranslate("算法计算失败，请检查输入文件以及配置数据是否正确！")
 
 STR_RESULT_MAP=QTLanguageTranslate("任务序号\t节点序号")
+STR_RESULT_DATA=QTLanguageTranslate("\'*\' 代表空闲 <节点序号>:<任务序号>")
 
 
 

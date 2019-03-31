@@ -3,13 +3,14 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 20:32:56
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-22 14:11:45
+# @Last Modified time: 2019-03-31 16:15:39
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
 __version__= '2019-03-10 20:32:56'
 
 import ctypes
+import os
 from TopoMapping import ParMapper
 from Run_log import Sys_logger
 from Graph import TaskGraph
@@ -59,6 +60,9 @@ def Load_task_graph_MAT(filepath):
 	finally:
 		pass
 
+def Load_task_graph_MPIPP(filepath):
+	return Load_task_graph_MAT(filepath)
+
 def Load_net_graph_txt(filepath,ct,node,core):
 	try:
 		#----------------------------------------------temp data
@@ -94,6 +98,13 @@ def Load_net_graph_tgt(filepath):
 		return None
 	finally:
 		pass
+
+def Load_net_graph_xml(filepath):
+	if '.xml' in filepath:
+		return 1
+	else :
+		return None
+
 def Load_result_ST(filepath):
 	try:
 		result_S=[]
@@ -140,6 +151,45 @@ def Algorithm_run_MPIPP(Tgfile,Ngfile,nfile_type,ct,node,core):
 	finally:
 		pass
 
+def Algorithm_run_TREEMATCH(Tgfile,Ngfile,nfile_type,bind_file='',optimization=True,metric=1):
+	#-t|x <Architecture file[tgt|xml]>
+	#-c <Communication pattern file> 
+	#[-b <binding constraint file>]
+	#[-d disable topology optimization]
+	#[-m evaluation metric (1: SUM_COM (default), 2: MAX_COM, 3: HOP_BYTE)]
+	shell_command="./TreeMatch/mapping"
+	if nfile_type == '.xml':
+		shell_command+=" -x "+str(Ngfile)
+	elif nfile_type == '.tgt':
+		shell_command+=" -t "+str(Ngfile)
+	else:
+		Sys_logger.info("Ngfile type not true:%s"%(nfile_type))
+
+	shell_command+=" -c "+str(Tgfile)
+
+	if bind_file != '':
+		shell_command+=" -b "+str(bind_file)
+	if not optimization :
+		shell_command+=" -d"
+	if metric == 2:
+		shell_command+=" -m 2"
+	elif metric == 3:
+		shell_command+=" -m 3"
+
+	shell_command="echo $("+shell_command+") > ./TreeMatch_Result.ST"
+
+	shell_state=os.system(shell_command)
+	if shell_state != 0:
+		Sys_logger.debug("shell command:"+shell_command+" run error with code:%d"%(shell_state))
+		Sys_logger.info("TreeMatch run error!")
+		raise Exception("shell command:"+shell_command+" run error with code:%d"%(shell_state))
+	with open("./TreeMatch_Result.ST",'r') as rf:
+		for lines in rf:
+			linesplit=lines.strip().split()
+			if linesplit[0] == 'TreeMatch:':
+				Result=linesplit[1].split(',')
+	Result = [int(i) for i in Result]
+	return Result
 
 def Result_print(result):
 	print("result_S:"+str(ParMapper.S2ST(result)))
