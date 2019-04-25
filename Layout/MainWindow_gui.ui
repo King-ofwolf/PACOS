@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1120</width>
+    <height>530</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1120</width>
+    <height>530</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1120</width>
+    <height>530</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>基于拓扑映射的并行应用通信优化系统</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1120</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_main">
+    <property name="title">
+     <string>菜单</string>
+    </property>
+    <widget class="QMenu" name="menuOption">
+     <property name="title">
+      <string>option</string>
+     </property>
+     <addaction name="actionSuboption"/>
+    </widget>
+    <addaction name="menuOption"/>
+   </widget>
+   <widget class="QMenu" name="menu_example">
+    <property name="title">
+     <string>样例</string>
+    </property>
+   </widget>
+   <addaction name="menu_main"/>
+   <addaction name="menu_example"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSuboption">
+   <property name="text">
+    <string>suboption</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

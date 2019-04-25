@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 15:25:06
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-31 18:44:38
+# @Last Modified time: 2019-04-14 19:25:10
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -13,6 +13,8 @@ import sys
 import os
 import subprocess
 import traceback
+import json
+import functools
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import QtWebKit
@@ -22,6 +24,7 @@ from Layout import MsgBox_gui
 from Layout import ConfigBox_gui
 from Layout import Graph_gui
 from Layout import ResultBox_gui
+from Layout import MainWindow_gui
 from Run_log import Sys_logger,LOG_DEBUG,LOG_INFO
 
 import Algorithm_manage
@@ -117,6 +120,9 @@ class ConfigBox_Window(QtGui.QWidget):
 
 	def getopt(self):
 		return self._options
+
+	def setopt(self,options):
+		self._options=options[0:5]
 
 	def set_option_visible(self,options):
 		self.qt_ui.label_cf_1.setVisible(options[0])
@@ -316,15 +322,18 @@ class GraphBox_Window(QtGui.QWidget):
 
 class ResultBox_window(QtGui.QWidget):
 	"""docstring for ResultBox_window"""
-	def __init__(self,parent):
+	def __init__(self,parent,graphpath='./Graph/mapgraph.html'):
 		super(ResultBox_window, self).__init__()
 		self.parent=parent
+		self.graphpath=graphpath
 		self.paint_UI()
 		self.center()
 
 	def paint_UI(self):
 		self.qt_ui=ResultBox_gui.Ui_Dialog()
 		self.qt_ui.setupUi(self)
+		self.webview=QtWebKit.QWebView(self.qt_ui.tab)
+
 	def center(self):
 		qr = self.frameGeometry()
 		cp = QtGui.QDesktopWidget().availableGeometry().center()
@@ -355,23 +364,14 @@ class ResultBox_window(QtGui.QWidget):
 			self.qt_ui.listWidget.addItem(item)
 
 		#map tab
-		#item = self.qt_ui.listWidget_2.item(0).setText(_translate("Dialog", "", None))
-		self.qt_ui.listWidget_2.clear()
-		item =QtGui.QListWidgetItem()
-		item.setText(Language.STR_RESULT_DATA)
-		self.qt_ui.listWidget_2.addItem(item)
-		Stemp=self.ResultTranslate(Slist,ct)
-		index=0
-		while index<ct:
-			strtemp=''
-			for i in range(9):
-				if index >= ct:
-					break
-				strtemp+=str(index)+":"+str('*' if Stemp[index] == -1 else Stemp[index])+"\t"
-				index+=1
-			item=QtGui.QListWidgetItem()
-			item.setText(strtemp)
-			self.qt_ui.listWidget_2.addItem(item)
+		self.weburl=QtCore.QUrl(self.graphpath)
+		self.webview.load(self.weburl)
+
+	def setAlgorithmmsg(self,algotype,tasknum,corenum,caculate_time):
+		self.qt_ui.label_algorithm.setText(Algorithm_manage.ALGORITHM_NAME[algotype])
+		self.qt_ui.label_tasknum.setText(str(tasknum))
+		self.qt_ui.label_corenum.setText(str(corenum))
+		self.qt_ui.label_caculatetime.setText(str(caculate_time))
 
 	#translate the result net to task into task to net (S to ST)
 	def ResultTranslate(self,Slist,ct):
@@ -410,19 +410,20 @@ class Algorithm_begin(QtCore.QObject):
 			self.Algorithm_choose()
 
 			if self.algotype == Algorithm_manage.TOPOMAPPING:
-				self.result=Algorithm_manage.Algorithm_run_TopoMapping(alg_tgfile,alg_ngfile,task_size,net_ct,net_node,net_core)
+				self.result=Algorithm_manage.Algorithm_run(Algorithm_manage.TOPOMAPPING,alg_tgfile,alg_ngfile,task_size=task_size,net_ct=net_ct,net_node=net_node,net_core=net_core)
 			elif self.algotype == Algorithm_manage.MPIPP:
 				ngfile_type = self.parent.qt_ui.comboBox_ngfiletype.currentText()
-				self.result=Algorithm_manage.Algorithm_run_MPIPP(alg_tgfile,alg_ngfile,ngfile_type,net_ct,net_node,net_core)
+				self.result=Algorithm_manage.Algorithm_run(Algorithm_manage.MPIPP,alg_tgfile,alg_ngfile,nfile_type=ngfile_type,ct=net_ct,node=net_node,core=net_core)
 			elif self.algotype == Algorithm_manage.TREEMATCH:
 				ngfile_type = self.parent.qt_ui.comboBox_ngfiletype.currentText()
 				bind_choose = self.parent.qt_ui.radioButton_config_op2.isChecked()
 				bind_file = alg_cgfile if bind_choose else ''
 				optimization = not self.parent.qt_ui.radioButton_config_op3.isChecked()
 				metric=self.parent.qt_ui.comboBox_metric.currentIndex()+1
-				self.result=Algorithm_manage.Algorithm_run_TREEMATCH(alg_tgfile,alg_ngfile,ngfile_type,bind_file,optimization,metric)
+				self.result=Algorithm_manage.Algorithm_run(Algorithm_manage.TREEMATCH,alg_tgfile,alg_ngfile,nfile_type=ngfile_type,bind_file=bind_file,optimization=optimization,metric=metric)
 
 			self.parent.Result_Show.setResult(self.result,net_ct)
+			self.parent.Result_Show.setAlgorithmmsg(self.algotype,task_size,net_ct,0)
 			self.parent.Result_Show.resultshow()
 		except Exception as e:
 			Sys_logger.debug(str(e))
@@ -435,7 +436,50 @@ class Algorithm_begin(QtCore.QObject):
 		self.parent.set_active()
 		#Algorithm_manage.Result_print(self.result)
 
-class Main_Window(QtGui.QWidget):
+class Window_Menu(QtGui.QMainWindow):
+	"""docstring for Window_Menu"""
+	def __init__(self, parent):
+		super(Window_Menu, self).__init__()
+		self.parent = parent
+		self.option_file='./examples/examples.json'
+		self.paint_UI()
+
+	def paint_UI(self):
+		self.qt_ui=MainWindow_gui.Ui_MainWindow()
+		self.qt_ui.setupUi(self.parent)
+		self.add_example()
+
+	def add_example(self):
+		self.actions=[]
+		self.option_dics=[]
+		with open(self.option_file) as opf:
+			examples_dic=json.load(opf)
+		for algo in examples_dic:
+			sub_menu=QtGui.QMenu(self.qt_ui.menu_example)
+			sub_menu.setTitle(algo)
+			self.qt_ui.menu_example.addAction(sub_menu.menuAction())
+			for exam in examples_dic[algo]:
+				actionOption=QtGui.QAction(self.parent)
+				actionOption.setText(exam)
+				actionOption.triggered.connect(functools.partial(self.set_example,options_dic=examples_dic[algo][exam],algo=algo))
+				#actionOption.triggered.connect(lambda x:self.set_example(examples_dic[algo][exam]))
+				sub_menu.addAction(actionOption)
+
+	def set_example(self,options_dic={},algo=""):
+		if algo == "TreeMatch":
+			self.parent.qt_ui.radioButton_algorithm_3.setChecked(True)
+		elif algo == "MPIPP":
+			self.parent.qt_ui.radioButton_algorithm_2.setChecked(True)
+		elif algo == "TopoMapping":
+			self.parent.qt_ui.radioButton_algorithm_1.setChecked(True)
+		self.parent.qt_ui.lineEdit_filein_1.setText(options_dic['task_file'])
+		self.parent.qt_ui.comboBox_tgfiletype.setCurrentIndex(self.parent.qt_ui.comboBox_tgfiletype.findText(options_dic['task_type']))
+		self.parent.Config_Setter1.setopt([int(options_dic['task_num']),0,0,0,0])
+		self.parent.qt_ui.lineEdit_filein_2.setText(options_dic['net_file'])
+		self.parent.qt_ui.comboBox_ngfiletype.setCurrentIndex(self.parent.qt_ui.comboBox_ngfiletype.findText(options_dic['net_type']))
+		self.parent.Config_Setter2.setopt([int(options_dic['net_ct']),int(options_dic['net_node']),int(options_dic['net_core']),0,0])
+
+class Main_Window(QtGui.QMainWindow):
 	"""docstring for Main_Window"""
 	def __init__(self):
 		super(Main_Window, self).__init__()
@@ -446,11 +490,12 @@ class Main_Window(QtGui.QWidget):
 		self.show()
 		
 	def paint_UI(self):
+		self.qt_menu=Window_Menu(self)
 		self.qt_ui=Opration_gui.Ui_Form()
 		self.qt_ui.setupUi(self)
 		#disabled at begin
-		self.qt_ui.pushButton_exefile_1.setEnabled(False)
-		self.qt_ui.pushButton_exefile_2.setEnabled(False)
+		# self.qt_ui.pushButton_exefile_1.setEnabled(False)
+		# self.qt_ui.pushButton_exefile_2.setEnabled(False)
 		self.qt_ui.pushButton_tg_show.setEnabled(False)
 		#line3 file in layout
 		self.set_line3_file_in_layout(False)
@@ -531,8 +576,8 @@ class Main_Window(QtGui.QWidget):
 
 	def activity_binding(self):
 		#configure setting button released => file analysis button enabled
-		self.qt_ui.pushButton_cf_set1.released.connect(lambda:self.qt_ui.pushButton_exefile_1.setEnabled(True))
-		self.qt_ui.pushButton_cf_set2.released.connect(lambda:self.qt_ui.pushButton_exefile_2.setEnabled(True))
+		#self.qt_ui.pushButton_cf_set1.released.connect(lambda:self.qt_ui.pushButton_exefile_1.setEnabled(True))
+		#self.qt_ui.pushButton_cf_set2.released.connect(lambda:self.qt_ui.pushButton_exefile_2.setEnabled(True))
 
 		#file changed ==> analysis file state clear
 		self.qt_ui.lineEdit_filein_1.textChanged.connect(self.qt_ui.textEdit_exestate_1.clear)
@@ -541,7 +586,7 @@ class Main_Window(QtGui.QWidget):
 		#file analysis done ==> graph show button enabled
 		self.qt_ui.textEdit_exestate_1.textChanged.connect(lambda:self.qt_ui.pushButton_tg_show.setEnabled(True) if self.qt_ui.textEdit_exestate_1.toPlainText() == 'Done' else 0)
 
-		#tgfile type == tgt ==> config window changed to type 2
+		#tgfile type == tgt/xml ==> config window changed to type 2
 		self.qt_ui.comboBox_ngfiletype.currentIndexChanged.connect(self.activity_set_tgt)
 
 		#algorithm changed ==> option setter change
@@ -552,9 +597,14 @@ class Main_Window(QtGui.QWidget):
 		#TreeMatch:-b set ==> file 3 input
 		self.qt_ui.radioButton_config_op2.toggled.connect(lambda x:self.set_line3_file_in_layout(x))
 
+		#debug option checked ==> open debug mode
+		self.qt_ui.radioButton_config_op1.toggled.connect(self.activity_set_Debug_Mode)
+
 	@QtCore.Slot()
 	def activity_set_tgt(self):
 		if self.qt_ui.comboBox_ngfiletype.currentText() == '.tgt':
+			self.Config_Setter2.changewindow(2)
+		elif self.qt_ui.comboBox_ngfiletype.currentText() == '.xml':
 			self.Config_Setter2.changewindow(2)
 		else:
 			self.Config_Setter2.changewindow(0)
@@ -585,9 +635,14 @@ class Main_Window(QtGui.QWidget):
 		self.qt_ui.radioButton_config_op3.setToolTip("disable topology optimization")
 		self.qt_ui.radioButton_config_op4.setText("-m")
 		self.qt_ui.radioButton_config_op4.setToolTip("evaluation metric")
-		if self.qt_ui.radioButton_config_op2.isChecked:
+		if self.qt_ui.radioButton_config_op2.isChecked():
 			self.set_line3_file_in_layout(True)
-
+	@QtCore.Slot()
+	def activity_set_Debug_Mode(self):
+		if self.qt_ui.radioButton_config_op1.isChecked():
+			Sys_logger.setLevel(LOG_DEBUG)
+		else :
+			Sys_logger.setLevel(LOG_INFO)
 
 	def set_waiting(self):
 		self.setCursor(QtCore.Qt.WaitCursor)
@@ -599,7 +654,6 @@ class Main_Window(QtGui.QWidget):
 
 if __name__ == '__main__':
 	global msgwindow
-	Sys_logger.setLevel(LOG_DEBUG)
 	app=QtGui.QApplication(sys.argv)
 	mainwindow=Main_Window()
 	msgwindow=MsgBox_Window(mainwindow)

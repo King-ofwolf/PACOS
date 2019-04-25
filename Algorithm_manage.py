@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 20:32:56
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-31 16:15:39
+# @Last Modified time: 2019-04-14 19:24:42
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -14,10 +14,12 @@ import os
 from TopoMapping import ParMapper
 from Run_log import Sys_logger
 from Graph import TaskGraph
+from Graph import MapGraph
 
 TOPOMAPPING=1
 TREEMATCH=2
 MPIPP=3
+ALGORITHM_NAME=["Unknow","TopoMapping","TreeMatch","MPIPP"]
 ParMapper_TgFT = (".APHiD",".TOPO")
 ParMapper_NgFT = (".txt",)
 
@@ -119,10 +121,26 @@ def Load_result_ST(filepath):
 	finally:
 		pass
 
+def Algorithm_run(algotype,Tgfile,Ngfile,**kw):
+	if algotype == TOPOMAPPING:
+		if "configures" in kw:
+			result=Algorithm_run_TopoMapping(Tgfile,Ngfile,kw["task_size"],kw["net_ct"],kw["net_node"],kw["net_core"],kw["configures"])
+		else:
+			result=Algorithm_run_TopoMapping(Tgfile,Ngfile,kw["task_size"],kw["net_ct"],kw["net_node"],kw["net_core"])
+	elif algotype == MPIPP:
+		result=Algorithm_run_MPIPP(Tgfile,Ngfile,kw["nfile_type"],kw["ct"],kw["node"],kw["core"])
+	elif algotype == TREEMATCH:
+		bind_file = kw["bind_file"] if "bind_file" in kw else ''
+		optimization = kw["optimization"] if "optimization" in kw else True
+		metric = kw["metric"] if "metric" in kw else 1
+		result=Algorithm_run_TREEMATCH(Tgfile,Ngfile,kw["nfile_type"],bind_file,optimization,metric)
+
+	MapGraph.GenerateScatter(ST=result,outpath="./Graph/mapgraph.html")
+	return result
 
 def Algorithm_run_TopoMapping(Tgfile,Ngfile,task_size,net_ct,net_node,net_core,configures=[]):
 	#tasklists=ParMapper.TaskList(Tg)
-	result_S=ParMapper.main(Tgfile,Ngfile,task_size,net_ct,net_node,net_core)
+	result_S=ParMapper.main(Tgfile,Ngfile,task_size,net_ct,net_node,net_core,debug_mode=False,resultfile='./TopoMapping_Result.ST')
 	#result_S=ParMapper.ParMapper(Tg,Ng,tasklists.T,process=4,strategy=ParMapper.default_compare,compare_alf=ParMapper.COMPARE_ALF,cost_function_mode=ParMapper.COST_FUNCTION_MODE)
 	#print("result_S:"+str(ParMapper.S2ST(result_S)))
 	return ParMapper.S2ST(result_S)

@@ -256,6 +256,7 @@ class Ui_Form(object):
         self.radioButton_config_op2 = QtGui.QRadioButton(self.horizontalLayoutWidget_2)
         self.radioButton_config_op2.setMinimumSize(QtCore.QSize(0, 30))
         self.radioButton_config_op2.setMaximumSize(QtCore.QSize(16777215, 30))
+        self.radioButton_config_op2.setCheckable(True)
         self.radioButton_config_op2.setAutoExclusive(False)
         self.radioButton_config_op2.setObjectName(_fromUtf8("radioButton_config_op2"))
         self.horizontalLayout_7.addWidget(self.radioButton_config_op2)
@@ -389,13 +390,7 @@ class Ui_Form(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Ubuntu\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">文件输入操作提示：</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">文件输入操作提示：</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">文件输入操作提示：</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">文件输入操作提示：</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">文件输入操作提示：</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">文件输入操作提示：</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">文件输入操作提示：</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">文件输入操作提示：</p></body></html>", None))
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.label_10.setText(_translate("Form", "算法选择", None))
         self.radioButton_algorithm_1.setText(_translate("Form", "算法1", None))
         self.radioButton_algorithm_2.setText(_translate("Form", "算法2", None))

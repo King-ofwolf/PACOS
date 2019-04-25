@@ -107,6 +107,11 @@ class Ui_Form(object):
         self.pushButton_ensure = QtGui.QPushButton(self.verticalLayoutWidget)
         self.pushButton_ensure.setMinimumSize(QtCore.QSize(80, 30))
         self.pushButton_ensure.setMaximumSize(QtCore.QSize(80, 30))
+        self.pushButton_ensure.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.pushButton_ensure.setAutoRepeat(False)
+        self.pushButton_ensure.setAutoDefault(False)
+        self.pushButton_ensure.setDefault(False)
+        self.pushButton_ensure.setFlat(False)
         self.pushButton_ensure.setObjectName(_fromUtf8("pushButton_ensure"))
         self.formLayout_4.setWidget(0, QtGui.QFormLayout.FieldRole, self.pushButton_ensure)
         self.verticalLayout.addLayout(self.formLayout_4)
@@ -122,6 +127,8 @@ class Ui_Form(object):
         self.label_cf_2.setText(_translate("Form", "Node总个数:", None))
         self.label_cf_4.setText(_translate("Form", "option1", None))
         self.pushButton_cancel.setText(_translate("Form", "取消", None))
+        self.pushButton_cancel.setShortcut(_translate("Form", "Esc", None))
         self.pushButton_ensure.setText(_translate("Form", "确定", None))
+        self.pushButton_ensure.setShortcut(_translate("Form", "Return", None))
 
 import sourcefile_rc

@@ -3,13 +3,12 @@
 # @Author: kingofwolf
 # @Date:   2019-03-20 16:15:11
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-21 09:52:32
+# @Last Modified time: 2019-04-04 16:56:58
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
 __version__= '2019-03-20 16:15:11'
 
-import random
 from pyecharts import HeatMap
 
 def GenerateHeatMap(matrix,outpath="./taskgraph.html"):

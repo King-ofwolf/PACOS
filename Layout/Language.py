@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-17 17:13:49
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-24 13:48:43
+# @Last Modified time: 2019-04-14 17:03:43
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -19,7 +19,10 @@ STR_CACULATE_FAILD=QTLanguageTranslate("算法计算失败，请检查输入文�
 STR_RESULT_MAP=QTLanguageTranslate("任务序号\t节点序号")
 STR_RESULT_DATA=QTLanguageTranslate("\'*\' 代表空闲 <节点序号>:<任务序号>")
 
-
+STR_CACULATER_CHINESE="算法："
+STR_TASK_NUMBER_CHINESE="任务数："
+STR_CORE_NUMBER_CHINESE="核心数："
+STR_CACULATER_TIME_CHINESE="算法运行时间（ms）："
 
 STR_FILE_INPUT_INFOMATION='''
 <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">

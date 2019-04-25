@@ -1,4 +1,4 @@
-all : Opration_gui.py sourcefile_rc.py MsgBox_gui.py ConfigBox_gui.py Graph_gui.py ResultBox_gui.py
+all : Opration_gui.py sourcefile_rc.py MsgBox_gui.py ConfigBox_gui.py Graph_gui.py ResultBox_gui.py MainWindow_gui.py
 
 Opration_gui.py : Opration_gui.ui
 	pyuic4 -o Opration_gui.py Opration_gui.ui
@@ -12,8 +12,8 @@ Graph_gui.py : Graph_gui.ui
 	pyuic4 -o Graph_gui.py Graph_gui.ui
 ResultBox_gui.py : ResultBox_gui.ui
 	pyuic4 -o ResultBox_gui.py ResultBox_gui.ui
-
-
+MainWindow_gui.py : MainWindow_gui.ui
+	pyuic4 -o MainWindow_gui.py MainWindow_gui.ui
 .PHONY : clean
 clean : 
 	rm -rf *.pyc
