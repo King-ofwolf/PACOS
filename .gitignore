@@ -112,3 +112,4 @@ test/
 
 #result file
 *.ST
+Graph/*.html

@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 15:25:06
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-04-14 19:25:10
+# @Last Modified time: 2019-04-25 19:48:08
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -436,63 +436,19 @@ class Algorithm_begin(QtCore.QObject):
 		self.parent.set_active()
 		#Algorithm_manage.Result_print(self.result)
 
-class Window_Menu(QtGui.QMainWindow):
-	"""docstring for Window_Menu"""
-	def __init__(self, parent):
-		super(Window_Menu, self).__init__()
-		self.parent = parent
-		self.option_file='./examples/examples.json'
-		self.paint_UI()
-
-	def paint_UI(self):
-		self.qt_ui=MainWindow_gui.Ui_MainWindow()
-		self.qt_ui.setupUi(self.parent)
-		self.add_example()
-
-	def add_example(self):
-		self.actions=[]
-		self.option_dics=[]
-		with open(self.option_file) as opf:
-			examples_dic=json.load(opf)
-		for algo in examples_dic:
-			sub_menu=QtGui.QMenu(self.qt_ui.menu_example)
-			sub_menu.setTitle(algo)
-			self.qt_ui.menu_example.addAction(sub_menu.menuAction())
-			for exam in examples_dic[algo]:
-				actionOption=QtGui.QAction(self.parent)
-				actionOption.setText(exam)
-				actionOption.triggered.connect(functools.partial(self.set_example,options_dic=examples_dic[algo][exam],algo=algo))
-				#actionOption.triggered.connect(lambda x:self.set_example(examples_dic[algo][exam]))
-				sub_menu.addAction(actionOption)
-
-	def set_example(self,options_dic={},algo=""):
-		if algo == "TreeMatch":
-			self.parent.qt_ui.radioButton_algorithm_3.setChecked(True)
-		elif algo == "MPIPP":
-			self.parent.qt_ui.radioButton_algorithm_2.setChecked(True)
-		elif algo == "TopoMapping":
-			self.parent.qt_ui.radioButton_algorithm_1.setChecked(True)
-		self.parent.qt_ui.lineEdit_filein_1.setText(options_dic['task_file'])
-		self.parent.qt_ui.comboBox_tgfiletype.setCurrentIndex(self.parent.qt_ui.comboBox_tgfiletype.findText(options_dic['task_type']))
-		self.parent.Config_Setter1.setopt([int(options_dic['task_num']),0,0,0,0])
-		self.parent.qt_ui.lineEdit_filein_2.setText(options_dic['net_file'])
-		self.parent.qt_ui.comboBox_ngfiletype.setCurrentIndex(self.parent.qt_ui.comboBox_ngfiletype.findText(options_dic['net_type']))
-		self.parent.Config_Setter2.setopt([int(options_dic['net_ct']),int(options_dic['net_node']),int(options_dic['net_core']),0,0])
-
-class Main_Window(QtGui.QMainWindow):
+class Main_Window(QtGui.QWidget):
 	"""docstring for Main_Window"""
-	def __init__(self):
+	def __init__(self,parent):
 		super(Main_Window, self).__init__()
+		self.parent=parent
 		self.paint_UI()
 		self.option_setting()
 		self.button_binding()
 		self.activity_binding()
-		self.show()
 		
 	def paint_UI(self):
-		self.qt_menu=Window_Menu(self)
 		self.qt_ui=Opration_gui.Ui_Form()
-		self.qt_ui.setupUi(self)
+		self.qt_ui.setupUi(self.parent)
 		#disabled at begin
 		# self.qt_ui.pushButton_exefile_1.setEnabled(False)
 		# self.qt_ui.pushButton_exefile_2.setEnabled(False)
@@ -590,9 +546,9 @@ class Main_Window(QtGui.QMainWindow):
 		self.qt_ui.comboBox_ngfiletype.currentIndexChanged.connect(self.activity_set_tgt)
 
 		#algorithm changed ==> option setter change
-		self.qt_ui.radioButton_algorithm_1.clicked.connect(self.activity_set_Algorithm_TopoMapping)
-		self.qt_ui.radioButton_algorithm_2.clicked.connect(self.activity_set_Algorithm_MPIPP)
-		self.qt_ui.radioButton_algorithm_3.clicked.connect(self.activity_set_Algorithm_TreeMatch)
+		self.qt_ui.radioButton_algorithm_1.toggled.connect(self.activity_set_Algorithm_TopoMapping)
+		self.qt_ui.radioButton_algorithm_2.toggled.connect(self.activity_set_Algorithm_MPIPP)
+		self.qt_ui.radioButton_algorithm_3.toggled.connect(self.activity_set_Algorithm_TreeMatch)
 
 		#TreeMatch:-b set ==> file 3 input
 		self.qt_ui.radioButton_config_op2.toggled.connect(lambda x:self.set_line3_file_in_layout(x))
@@ -609,22 +565,25 @@ class Main_Window(QtGui.QMainWindow):
 		else:
 			self.Config_Setter2.changewindow(0)
 
-	@QtCore.Slot()
-	def activity_set_Algorithm_TopoMapping(self):
+	@QtCore.Slot(bool)
+	def activity_set_Algorithm_TopoMapping(self,checked):
+		if not checked: return
 		self.qt_ui.radioButton_config_op2.setVisible(False)
 		self.qt_ui.radioButton_config_op3.setVisible(False)
 		self.qt_ui.radioButton_config_op4.setVisible(False) 
 		self.qt_ui.comboBox_metric.setVisible(False)
 		self.set_line3_file_in_layout(False)
-	@QtCore.Slot()
-	def activity_set_Algorithm_MPIPP(self):
+	@QtCore.Slot(bool)
+	def activity_set_Algorithm_MPIPP(self,checked):
+		if not checked: return
 		self.qt_ui.radioButton_config_op2.setVisible(False)
 		self.qt_ui.radioButton_config_op3.setVisible(False)
 		self.qt_ui.radioButton_config_op4.setVisible(False) 
 		self.qt_ui.comboBox_metric.setVisible(False)
 		self.set_line3_file_in_layout(False)
-	@QtCore.Slot()
-	def activity_set_Algorithm_TreeMatch(self):
+	@QtCore.Slot(bool)
+	def activity_set_Algorithm_TreeMatch(self,checked):
+		if not checked: return
 		self.qt_ui.radioButton_config_op2.setVisible(True)
 		self.qt_ui.radioButton_config_op3.setVisible(True)
 		self.qt_ui.radioButton_config_op4.setVisible(True) 
@@ -652,9 +611,58 @@ class Main_Window(QtGui.QMainWindow):
 		self.setCursor(QtCore.Qt.ArrowCursor)
 		self.setEnabled(True)
 
+	def setVisible(self,flag):
+		self.parent.setVisible(flag)
+
+class Window(QtGui.QMainWindow):
+	"""docstring for Window"""
+	def __init__(self):
+		super(Window, self).__init__()
+		self.option_file='./examples/examples.json'
+		self.paint_UI()
+		self.show()
+		
+	def paint_UI(self):
+		self.qt_ui=MainWindow_gui.Ui_MainWindow()
+		self.qt_ui.setupUi(self)
+		self.add_example()
+		self.mainwindow=Main_Window(self)
+
+	def add_example(self):
+		self.actions=[]
+		self.option_dics=[]
+		with open(self.option_file) as opf:
+			examples_dic=json.load(opf)
+		for algo in examples_dic:
+			sub_menu=QtGui.QMenu(self.qt_ui.menu_example)
+			sub_menu.setTitle(algo)
+			self.qt_ui.menu_example.addAction(sub_menu.menuAction())
+			for exam in examples_dic[algo]:
+				actionOption=QtGui.QAction(self)
+				actionOption.setText(exam)
+				actionOption.triggered.connect(functools.partial(self.set_example,options_dic=examples_dic[algo][exam],algo=algo))
+				#actionOption.triggered.connect(lambda x:self.set_example(examples_dic[algo][exam]))
+				sub_menu.addAction(actionOption)
+
+	def set_example(self,options_dic={},algo=""):
+		if algo == "TreeMatch":
+			self.mainwindow.qt_ui.radioButton_algorithm_3.setChecked(True)
+		elif algo == "MPIPP":
+			self.mainwindow.qt_ui.radioButton_algorithm_2.setChecked(True)
+		elif algo == "TopoMapping":
+			self.mainwindow.qt_ui.radioButton_algorithm_1.setChecked(True)
+		self.mainwindow.qt_ui.lineEdit_filein_1.setText(options_dic['task_file'])
+		self.mainwindow.qt_ui.comboBox_tgfiletype.setCurrentIndex(self.mainwindow.qt_ui.comboBox_tgfiletype.findText(options_dic['task_type']))
+		self.mainwindow.Config_Setter1.setopt([int(options_dic['task_num']),0,0,0,0])
+		self.mainwindow.qt_ui.lineEdit_filein_2.setText(options_dic['net_file'])
+		self.mainwindow.qt_ui.comboBox_ngfiletype.setCurrentIndex(self.mainwindow.qt_ui.comboBox_ngfiletype.findText(options_dic['net_type']))
+		self.mainwindow.Config_Setter2.setopt([int(options_dic['net_ct']),int(options_dic['net_node']),int(options_dic['net_core']),0,0])
+
+
+
 if __name__ == '__main__':
 	global msgwindow
 	app=QtGui.QApplication(sys.argv)
-	mainwindow=Main_Window()
+	mainwindow=Window()
 	msgwindow=MsgBox_Window(mainwindow)
 	app.exec_()
