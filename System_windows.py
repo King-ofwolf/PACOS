@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 15:25:06
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-04-25 19:48:08
+# @Last Modified time: 2019-04-26 16:06:05
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -47,6 +47,8 @@ class MsgBox_Window(QtGui.QWidget):
 	def paint_UI(self):
 		self.qt_ui=MsgBox_gui.Ui_Dialog()
 		self.qt_ui.setupUi(self)
+		self.qt_ui.textBrowser_detail.setVisible(False)
+
 	def center(self):
 		qr = self.frameGeometry()
 		cp = QtGui.QDesktopWidget().availableGeometry().center()
@@ -57,6 +59,21 @@ class MsgBox_Window(QtGui.QWidget):
 		#ok button binding with close the window
 		self.qt_ui.pushButton.clicked.connect(self.topclose)
 
+		#detail button ==> show details
+		self.qt_ui.pushButton_detail.clicked.connect(self.activity_detail_show)
+
+	def activity_detail_show(self):
+		self.qt_ui.textBrowser_detail.setVisible(True)
+		self.fixsize('maxinum')
+		self.qt_ui.pushButton_detail.setEnabled(False)
+
+	def fixsize(self,flag):
+		if flag == 'maxinum':
+			self.setGeometry(QtCore.QRect(0, 0, 1000, 300))
+		else :
+			self.setGeometry(QtCore.QRect(0, 0, 400, 300))
+		self.center()
+
 	@property
 	def msg(self):
 		return self._msg
@@ -65,7 +82,9 @@ class MsgBox_Window(QtGui.QWidget):
 	def msg(self,msgstr):
 		self._msg=msgstr
 		if self._exception!=None:
-			msgstr+="\nDetails:\n"+str(traceback.format_exc())
+			self.qt_ui.textBrowser_detail.setText(Language.QTLanguageTranslate("Details:\n"+str(traceback.format_exc())))
+		else:
+			self.qt_ui.textBrowser_detail.setText("Details:")
 		self.qt_ui.textBrowser.setText(msgstr)
 		self.parent.setVisible(False)
 		self.show()
@@ -77,9 +96,16 @@ class MsgBox_Window(QtGui.QWidget):
 		self._init()
 		self.parent.setVisible(True)
 
+	def closeEvent(self,event):
+		self.parent.setVisible(True)
+		self.qt_ui.textBrowser_detail.setVisible(False)
+		self.fixsize('mininum')
+		event.accept()
+
 	def _init(self):
 		self._msg="message info"
 		self._exception=None
+
 	@property
 	def exception(self):
 		return self._exception
@@ -167,7 +193,11 @@ class ConfigBox_Window(QtGui.QWidget):
 	def cancelclose(self):
 		self.close()
 		self.parent.setVisible(True)
-		Sys_logger.info("Configwindow cancel close")		
+		Sys_logger.info("Configwindow cancel close")
+
+	def closeEvent(self,event):
+		self.parent.setVisible(True)
+		event.accept()
 
 class Open_File_Browser(QtCore.QObject):
 	"""A window to let user to choose a file from path and return the file path"""
@@ -619,7 +649,9 @@ class Window(QtGui.QMainWindow):
 	def __init__(self):
 		super(Window, self).__init__()
 		self.option_file='./examples/examples.json'
+		self.qss_file='./Layout/QSS/white_styles.css'
 		self.paint_UI()
+		self.paint_style()
 		self.show()
 		
 	def paint_UI(self):
@@ -627,6 +659,12 @@ class Window(QtGui.QMainWindow):
 		self.qt_ui.setupUi(self)
 		self.add_example()
 		self.mainwindow=Main_Window(self)
+
+	def paint_style(self):
+		pass
+		# with open(self.qss_file,'r') as style_file:
+		# 	style_sheet=style_file.read()
+		# 	self.setStyleSheet(Language.QTLanguageTranslate(style_sheet))
 
 	def add_example(self):
 		self.actions=[]

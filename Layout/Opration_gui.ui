@@ -44,8 +44,14 @@
    <iconset resource="sourcefile.qrc">
     <normaloff>:/.png/png/1208066.png</normaloff>:/.png/png/1208066.png</iconset>
   </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
+  </property>
   <property name="autoFillBackground">
    <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="horizontalLayoutWidget_2">
    <property name="geometry">
@@ -204,6 +210,9 @@
             <height>30</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>设置</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -293,6 +302,9 @@
             <width>30</width>
             <height>30</height>
            </size>
+          </property>
+          <property name="toolTip">
+           <string>查看</string>
           </property>
           <property name="text">
            <string/>
@@ -431,6 +443,9 @@
             <height>30</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>设置</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -520,6 +535,9 @@
             <width>30</width>
             <height>30</height>
            </size>
+          </property>
+          <property name="toolTip">
+           <string>查看</string>
           </property>
           <property name="text">
            <string/>

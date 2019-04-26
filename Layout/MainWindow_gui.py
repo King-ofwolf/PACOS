@@ -28,6 +28,7 @@ class Ui_MainWindow(object):
         MainWindow.resize(1120, 530)
         MainWindow.setMinimumSize(QtCore.QSize(1120, 530))
         MainWindow.setMaximumSize(QtCore.QSize(1120, 530))
+        MainWindow.setStyleSheet(_fromUtf8(""))
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         MainWindow.setCentralWidget(self.centralwidget)

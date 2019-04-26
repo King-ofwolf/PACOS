@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>基于拓扑映射的并行应用通信优化系统</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

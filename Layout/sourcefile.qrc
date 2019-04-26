@@ -2,6 +2,9 @@
   <qresource prefix=".ico">
     <file>png/play.ico</file>
   </qresource>
+  <qresource prefix=".css">
+    <file>QSS/white_styles.css</file>
+  </qresource>
   <qresource prefix=".jpg">
     <file>png/4a7ff7d9c3372c03313de625da_560.jpg</file>
   </qresource>
