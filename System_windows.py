@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 15:25:06
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-04-26 16:06:05
+# @Last Modified time: 2019-05-23 16:51:27
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -15,6 +15,10 @@ import subprocess
 import traceback
 import json
 import functools
+
+SYSTEM_RUN_PATH, SYSTEM_RUN_FILE = os.path.split(os.path.abspath(sys.argv[0])) 
+os.chdir(SYSTEM_RUN_PATH)
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4 import QtWebKit
@@ -352,10 +356,11 @@ class GraphBox_Window(QtGui.QWidget):
 
 class ResultBox_window(QtGui.QWidget):
 	"""docstring for ResultBox_window"""
-	def __init__(self,parent,graphpath='./Graph/mapgraph.html'):
+	def __init__(self,parent,graphpath='./Graph/mapgraph.html',treepath='./Graph/treegraph.html'):
 		super(ResultBox_window, self).__init__()
 		self.parent=parent
 		self.graphpath=graphpath
+		self.treepath=treepath
 		self.paint_UI()
 		self.center()
 
@@ -363,6 +368,10 @@ class ResultBox_window(QtGui.QWidget):
 		self.qt_ui=ResultBox_gui.Ui_Dialog()
 		self.qt_ui.setupUi(self)
 		self.webview=QtWebKit.QWebView(self.qt_ui.tab)
+		self.treewebview=QtWebKit.QWebView(self.qt_ui.tab_3)
+
+		self.qt_ui.label_5.setVisible(False)
+		self.qt_ui.label_cputime.setVisible(False)
 
 	def center(self):
 		qr = self.frameGeometry()
@@ -397,11 +406,16 @@ class ResultBox_window(QtGui.QWidget):
 		self.weburl=QtCore.QUrl(self.graphpath)
 		self.webview.load(self.weburl)
 
-	def setAlgorithmmsg(self,algotype,tasknum,corenum,caculate_time):
+		#treemap tab
+		self.treeweburl=QtCore.QUrl(self.treepath)
+		self.treewebview.load(self.treeweburl)
+
+	def setAlgorithmmsg(self,algotype,tasknum,corenum,caculate_time,CPU_time):
 		self.qt_ui.label_algorithm.setText(Algorithm_manage.ALGORITHM_NAME[algotype])
 		self.qt_ui.label_tasknum.setText(str(tasknum))
 		self.qt_ui.label_corenum.setText(str(corenum))
 		self.qt_ui.label_caculatetime.setText(str(caculate_time))
+		self.qt_ui.label_cputime.setText(str(CPU_time))
 
 	#translate the result net to task into task to net (S to ST)
 	def ResultTranslate(self,Slist,ct):
@@ -440,20 +454,20 @@ class Algorithm_begin(QtCore.QObject):
 			self.Algorithm_choose()
 
 			if self.algotype == Algorithm_manage.TOPOMAPPING:
-				self.result=Algorithm_manage.Algorithm_run(Algorithm_manage.TOPOMAPPING,alg_tgfile,alg_ngfile,task_size=task_size,net_ct=net_ct,net_node=net_node,net_core=net_core)
+				self.result,runtime,cputime=Algorithm_manage.Algorithm_run(Algorithm_manage.TOPOMAPPING,alg_tgfile,alg_ngfile,task_size=task_size,net_ct=net_ct,net_node=net_node,net_core=net_core)
 			elif self.algotype == Algorithm_manage.MPIPP:
 				ngfile_type = self.parent.qt_ui.comboBox_ngfiletype.currentText()
-				self.result=Algorithm_manage.Algorithm_run(Algorithm_manage.MPIPP,alg_tgfile,alg_ngfile,nfile_type=ngfile_type,ct=net_ct,node=net_node,core=net_core)
+				self.result,runtime,cputime=Algorithm_manage.Algorithm_run(Algorithm_manage.MPIPP,alg_tgfile,alg_ngfile,nfile_type=ngfile_type,ct=net_ct,node=net_node,core=net_core)
 			elif self.algotype == Algorithm_manage.TREEMATCH:
 				ngfile_type = self.parent.qt_ui.comboBox_ngfiletype.currentText()
 				bind_choose = self.parent.qt_ui.radioButton_config_op2.isChecked()
 				bind_file = alg_cgfile if bind_choose else ''
 				optimization = not self.parent.qt_ui.radioButton_config_op3.isChecked()
 				metric=self.parent.qt_ui.comboBox_metric.currentIndex()+1
-				self.result=Algorithm_manage.Algorithm_run(Algorithm_manage.TREEMATCH,alg_tgfile,alg_ngfile,nfile_type=ngfile_type,bind_file=bind_file,optimization=optimization,metric=metric)
+				self.result,runtime,cputime=Algorithm_manage.Algorithm_run(Algorithm_manage.TREEMATCH,alg_tgfile,alg_ngfile,nfile_type=ngfile_type,bind_file=bind_file,optimization=optimization,metric=metric)
 
 			self.parent.Result_Show.setResult(self.result,net_ct)
-			self.parent.Result_Show.setAlgorithmmsg(self.algotype,task_size,net_ct,0)
+			self.parent.Result_Show.setAlgorithmmsg(self.algotype,task_size,net_ct,runtime,cputime)
 			self.parent.Result_Show.resultshow()
 		except Exception as e:
 			Sys_logger.debug(str(e))
@@ -634,12 +648,12 @@ class Main_Window(QtGui.QWidget):
 			Sys_logger.setLevel(LOG_INFO)
 
 	def set_waiting(self):
-		self.setCursor(QtCore.Qt.WaitCursor)
-		self.setEnabled(False)
+		self.parent.setCursor(QtCore.Qt.WaitCursor)
+		self.parent.setEnabled(False)
 
 	def set_active(self):
-		self.setCursor(QtCore.Qt.ArrowCursor)
-		self.setEnabled(True)
+		self.parent.setCursor(QtCore.Qt.ArrowCursor)
+		self.parent.setEnabled(True)
 
 	def setVisible(self,flag):
 		self.parent.setVisible(flag)

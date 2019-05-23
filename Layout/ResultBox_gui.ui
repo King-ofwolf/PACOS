@@ -41,7 +41,7 @@
     </sizepolicy>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -67,6 +67,11 @@
       </property>
      </item>
     </widget>
+   </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>可视化</string>
+    </attribute>
    </widget>
   </widget>
   <widget class="QWidget" name="horizontalLayoutWidget">
@@ -142,6 +147,23 @@
     </item>
     <item>
      <widget class="QLabel" name="label_caculatetime">
+      <property name="text">
+       <string>33355.35</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>CPU时间（ms）：</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_cputime">
       <property name="text">
        <string>33355.35</string>
       </property>

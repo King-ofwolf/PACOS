@@ -47,6 +47,9 @@ class Ui_Dialog(object):
         item = QtGui.QListWidgetItem()
         self.listWidget.addItem(item)
         self.tabWidget.addTab(self.tab_2, _fromUtf8(""))
+        self.tab_3 = QtGui.QWidget()
+        self.tab_3.setObjectName(_fromUtf8("tab_3"))
+        self.tabWidget.addTab(self.tab_3, _fromUtf8(""))
         self.horizontalLayoutWidget = QtGui.QWidget(Dialog)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 510, 811, 51))
         self.horizontalLayoutWidget.setObjectName(_fromUtf8("horizontalLayoutWidget"))
@@ -80,9 +83,16 @@ class Ui_Dialog(object):
         self.label_caculatetime = QtGui.QLabel(self.horizontalLayoutWidget)
         self.label_caculatetime.setObjectName(_fromUtf8("label_caculatetime"))
         self.horizontalLayout.addWidget(self.label_caculatetime)
+        self.label_5 = QtGui.QLabel(self.horizontalLayoutWidget)
+        self.label_5.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+        self.horizontalLayout.addWidget(self.label_5)
+        self.label_cputime = QtGui.QLabel(self.horizontalLayoutWidget)
+        self.label_cputime.setObjectName(_fromUtf8("label_cputime"))
+        self.horizontalLayout.addWidget(self.label_cputime)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -94,6 +104,7 @@ class Ui_Dialog(object):
         item.setText(_translate("Dialog", "任务序号\\t节点序号", None))
         self.listWidget.setSortingEnabled(__sortingEnabled)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "数字", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("Dialog", "可视化", None))
         self.label_2.setText(_translate("Dialog", "算法：", None))
         self.label_algorithm.setText(_translate("Dialog", "TopoMapping", None))
         self.label_1.setText(_translate("Dialog", "任务数：", None))
@@ -102,4 +113,6 @@ class Ui_Dialog(object):
         self.label_corenum.setText(_translate("Dialog", "128", None))
         self.label_4.setText(_translate("Dialog", "算法运行时间（ms）：", None))
         self.label_caculatetime.setText(_translate("Dialog", "33355.35", None))
+        self.label_5.setText(_translate("Dialog", "CPU时间（ms）：", None))
+        self.label_cputime.setText(_translate("Dialog", "33355.35", None))
 
