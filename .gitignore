@@ -113,3 +113,4 @@ test/
 #result file
 *.ST
 Graph/*.html
+Graph/tree.json

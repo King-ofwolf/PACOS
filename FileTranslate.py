@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-14 16:13:29
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-03-27 15:32:43
+# @Last Modified time: 2019-05-24 16:53:12
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -52,7 +52,7 @@ class TgMatrix(object):
 	def commadd(self,x,y,comm):
 		if (x>=self._Tnum) | (y>=self._Tnum):
 			print "Task number",x,y,"are out of index with max number ",self._Tnum
-			sys.exit(0)
+			return 0
 		self._commMatrix[x][y]+=comm
 		self._rateMatrix[x][y]+=1
 
@@ -291,7 +291,7 @@ def main(file_path,file_num,file_out,fmt):
 	tgfiles=TgFiles(file_path)
 	if tgfiles.number != file_num:
 		print "the file number you command is",file_num,",but the file in",file_path,"has",tgfiles.number,"Process files(file name with 'Process')."
-		sys.exit(0)
+		return 0
 	tgmatrix=TgMatrix(file_num)
 	for infile in tgfiles.files:
 		tgmatrix.analysis_file(infile)
@@ -307,6 +307,8 @@ def main(file_path,file_num,file_out,fmt):
 		tgmatrix.print_file_matrix(file_out)
 	if fmt[5]:
 		tgmatrix.print_file_rat(file_out)
+
+	return 1
 
 
 

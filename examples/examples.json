@@ -19,6 +19,126 @@
 			"net_ct":"128",
 			"net_node":"6",
 			"net_core":"24"
+		},
+		"240-12-20":{
+			"task_file":"./examples/taskgraph/CloverLeaf240.APHiD",
+			"task_type":".APHiD",
+			"task_num":"240",
+			"net_file":"./examples/netgraph/TimeCostDataFile_240-12-20.txt",
+			"net_type":".txt",
+			"net_ct":"240",
+			"net_node":"12",
+			"net_core":"20"
+		},
+		"240-10-24":{
+			"task_file":"./examples/taskgraph/CloverLeaf240.APHiD",
+			"task_type":".APHiD",
+			"task_num":"240",
+			"net_file":"./examples/netgraph/TimeCostDataFile_240-10-24.txt",
+			"net_type":".txt",
+			"net_ct":"240",
+			"net_node":"10",
+			"net_core":"24"
+		},
+		"256-13-20":{
+			"task_file":"./examples/taskgraph/CloverLeaf256.APHiD",
+			"task_type":".APHiD",
+			"task_num":"256",
+			"net_file":"./examples/netgraph/TimeCostDataFile_256-13-20.txt",
+			"net_type":".txt",
+			"net_ct":"256",
+			"net_node":"13",
+			"net_core":"20"
+		},
+		"256-11-24":{
+			"task_file":"./examples/taskgraph/CloverLeaf256.APHiD",
+			"task_type":".APHiD",
+			"task_num":"256",
+			"net_file":"./examples/netgraph/TimeCostDataFile_256-11-24.txt",
+			"net_type":".txt",
+			"net_ct":"256",
+			"net_node":"11",
+			"net_core":"24"
+		},
+		"320-16-20":{
+			"task_file":"./examples/taskgraph/CloverLeaf320.APHiD",
+			"task_type":".APHiD",
+			"task_num":"320",
+			"net_file":"./examples/netgraph/TimeCostDataFile_320-16-20.txt",
+			"net_type":".txt",
+			"net_ct":"320",
+			"net_node":"16",
+			"net_core":"20"
+		},
+		"320-14-24":{
+			"task_file":"./examples/taskgraph/CloverLeaf320.APHiD",
+			"task_type":".APHiD",
+			"task_num":"320",
+			"net_file":"./examples/netgraph/TimeCostDataFile_320-14-24.txt",
+			"net_type":".txt",
+			"net_ct":"320",
+			"net_node":"14",
+			"net_core":"24"
+		},
+		"480-24-20":{
+			"task_file":"./examples/taskgraph/CloverLeaf480.APHiD",
+			"task_type":".APHiD",
+			"task_num":"480",
+			"net_file":"./examples/netgraph/TimeCostDataFile_480-24-20.txt",
+			"net_type":".txt",
+			"net_ct":"480",
+			"net_node":"24",
+			"net_core":"20"
+		},
+		"480-20-24":{
+			"task_file":"./examples/taskgraph/CloverLeaf480.APHiD",
+			"task_type":".APHiD",
+			"task_num":"480",
+			"net_file":"./examples/netgraph/TimeCostDataFile_480-20-24.txt",
+			"net_type":".txt",
+			"net_ct":"480",
+			"net_node":"20",
+			"net_core":"24"
+		},
+		"512-16-20":{
+			"task_file":"./examples/taskgraph/CloverLeaf512.APHiD",
+			"task_type":".APHiD",
+			"task_num":"512",
+			"net_file":"./examples/netgraph/TimeCostDataFile_512-16-20.txt",
+			"net_type":".txt",
+			"net_ct":"512",
+			"net_node":"16",
+			"net_core":"20"
+		},
+		"512-22-24":{
+			"task_file":"./examples/taskgraph/CloverLeaf512.APHiD",
+			"task_type":".APHiD",
+			"task_num":"512",
+			"net_file":"./examples/netgraph/TimeCostDataFile_512-22-24.txt",
+			"net_type":".txt",
+			"net_ct":"512",
+			"net_node":"22",
+			"net_core":"24"
+		},
+		"640-32-20":{
+			"task_file":"./examples/taskgraph/CloverLeaf640.APHiD",
+			"task_type":".APHiD",
+			"task_num":"640",
+			"net_file":"./examples/netgraph/TimeCostDataFile_640-32-20.txt",
+			"net_type":".txt",
+			"net_ct":"640",
+			"net_node":"32",
+			"net_core":"20"
+		},
+		"640-27-24":{
+			"task_file":"./examples/taskgraph/CloverLeaf640.APHiD",
+			"task_type":".APHiD",
+			"task_num":"640",
+			"net_file":"./examples/netgraph/TimeCostDataFile_640-27-24.txt",
+			"net_type":".txt",
+			"net_ct":"640",
+			"net_node":"27",
+			"net_core":"24"
 		}
 	},
 	"MPIPP":{
@@ -41,6 +161,36 @@
 			"net_ct":"32",
 			"net_node":"0",
 			"net_core":"0"
+		},
+		"64":{
+			"task_file":"./examples/taskgraph/64.mat",
+			"task_type":".mat",
+			"task_num":"64",
+			"net_file":"./examples/netgraph/64.xml",
+			"net_type":".xml",
+			"net_ct":"64",
+			"net_node":"0",
+			"net_core":"0"
+		},
+		"128":{
+			"task_file":"./examples/taskgraph/128.mat",
+			"task_type":".mat",
+			"task_num":"128",
+			"net_file":"./examples/netgraph/128.tgt",
+			"net_type":".tgt",
+			"net_ct":"128",
+			"net_node":"0",
+			"net_core":"0"
+		},
+		"512":{
+			"task_file":"./examples/taskgraph/512.mat",
+			"task_type":".mat",
+			"task_num":"512",
+			"net_file":"./examples/netgraph/512.tgt",
+			"net_type":".tgt",
+			"net_ct":"512",
+			"net_node":"0",
+			"net_core":"0"
 		}
 	},
 	"TreeMatch":{
@@ -61,6 +211,36 @@
 			"net_file":"./examples/netgraph/32.tgt",
 			"net_type":".tgt",
 			"net_ct":"32",
+			"net_node":"0",
+			"net_core":"0"
+		},
+		"64":{
+			"task_file":"./examples/taskgraph/64.mat",
+			"task_type":".mat",
+			"task_num":"64",
+			"net_file":"./examples/netgraph/64.xml",
+			"net_type":".xml",
+			"net_ct":"64",
+			"net_node":"0",
+			"net_core":"0"
+		},
+		"128":{
+			"task_file":"./examples/taskgraph/128.mat",
+			"task_type":".mat",
+			"task_num":"128",
+			"net_file":"./examples/netgraph/128.tgt",
+			"net_type":".tgt",
+			"net_ct":"128",
+			"net_node":"0",
+			"net_core":"0"
+		},
+		"512":{
+			"task_file":"./examples/taskgraph/512.mat",
+			"task_type":".mat",
+			"task_num":"512",
+			"net_file":"./examples/netgraph/512.tgt",
+			"net_type":".tgt",
+			"net_ct":"512",
 			"net_node":"0",
 			"net_core":"0"
 		}

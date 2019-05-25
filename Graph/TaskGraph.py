@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-20 16:15:11
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-04-04 16:56:58
+# @Last Modified time: 2019-05-24 16:17:29
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -11,7 +11,7 @@ __version__= '2019-03-20 16:15:11'
 
 from pyecharts import HeatMap
 
-def GenerateHeatMap(matrix,outpath="./taskgraph.html"):
+def GenerateHeatMap(matrix,outpath="./taskgraph.svg"):
 	matrix_len=len(matrix)
 	x_axis = [str(i) for i in range(matrix_len)]
 	y_axis = [str(i) for i in range(matrix_len)]
@@ -25,7 +25,7 @@ def GenerateHeatMap(matrix,outpath="./taskgraph.html"):
 
 
 
-	heatmap = HeatMap(title = "Task communication Graph")
+	heatmap = HeatMap(title = "Task communication Graph",renderer='svg')
 	heatmap.add("Task communication Graph",
 		x_axis,y_axis,data,
 		lable_pos='bottom',

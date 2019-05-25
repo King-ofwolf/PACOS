@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-04-04 16:55:08
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-05-23 16:55:13
+# @Last Modified time: 2019-05-24 16:17:34
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -90,7 +90,7 @@ def GenerateTree(ST,Net,outpath='./treegraph.html'):
 	tree = Tree(width=600, height=nodes*20)
 	tree.add("Topology Mapping result", data,
 		tree_collapse_interval=0,
-		tree_right="50%",
+		tree_right="60%",
 		tree_symbol_size=10,
 		is_toolbox_show=False)
 	tree.render(outpath)

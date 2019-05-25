@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 15:25:06
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-05-23 16:51:27
+# @Last Modified time: 2019-05-26 06:30:54
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -45,8 +45,12 @@ class MsgBox_Window(QtGui.QWidget):
 		self.paint_UI()
 		self.center()
 		self.button_binding()
+		self._init()
+
+	def _init(self):
 		self._msg="message info"
 		self._exception=None
+		self._detail=None
 
 	def paint_UI(self):
 		self.qt_ui=MsgBox_gui.Ui_Dialog()
@@ -87,6 +91,8 @@ class MsgBox_Window(QtGui.QWidget):
 		self._msg=msgstr
 		if self._exception!=None:
 			self.qt_ui.textBrowser_detail.setText(Language.QTLanguageTranslate("Details:\n"+str(traceback.format_exc())))
+		elif not self._detail==None:
+			self.qt_ui.textBrowser_detail.setText(Language.QTLanguageTranslate("Details:\n"+str(self._detail)))
 		else:
 			self.qt_ui.textBrowser_detail.setText("Details:")
 		self.qt_ui.textBrowser.setText(msgstr)
@@ -97,18 +103,15 @@ class MsgBox_Window(QtGui.QWidget):
 	@QtCore.Slot()
 	def topclose(self):
 		self.close()
-		self._init()
-		self.parent.setVisible(True)
 
 	def closeEvent(self,event):
 		self.parent.setVisible(True)
 		self.qt_ui.textBrowser_detail.setVisible(False)
+		self.qt_ui.pushButton_detail.setEnabled(True)
+		self._init()
 		self.fixsize('mininum')
 		event.accept()
 
-	def _init(self):
-		self._msg="message info"
-		self._exception=None
 
 	@property
 	def exception(self):
@@ -116,6 +119,13 @@ class MsgBox_Window(QtGui.QWidget):
 	@exception.setter
 	def exception(self,msgexception):
 		self._exception=msgexception
+	@property
+	def detail(self):
+		return self._detail
+	@detail.setter
+	def detail(self,detail):
+		self._detail=detail
+	
 	
 
 class ConfigBox_Window(QtGui.QWidget):
@@ -278,15 +288,15 @@ class Open_File_Analysis(QtCore.QObject):
 				if (self.filetype == '.APHiD') | (self.filetype == '.TOPO'):
 					self.retmodule=Algorithm_manage.Load_task_graph_APHiD(self._lineEdit.text())
 					if self.retmodule != None:
-						if self.retmodule.size != task_size :
-							msgwindow.msg="Task number in Task file is %d, but you set it as %d."%(self.retmodule.size,task_size)
-							retmodule=None
+						if self.retmodule.size != task_size or task_size==0:
+							msgwindow.detail="Task number in Task file is %d, but you set it as %d."%(self.retmodule.size,task_size)
+							self.retmodule=None
 				elif (self.filetype == '.mat') | (self.filetype == '.MPIPP'):
 					self.retmodule=Algorithm_manage.Load_task_graph_MAT(self._lineEdit.text())
 					if self.retmodule != None:
-						if len(self.retmodule) != task_size:
-							msgwindow.msg="Task number in Task file is %d, but you set it as %d."%(len(self.retmodule),task_size)
-							retmodule=None
+						if len(self.retmodule) != task_size or task_size==0:
+							msgwindow.detail="Task number in Task file is %d, but you set it as %d."%(len(self.retmodule),task_size)
+							self.retmodule=None
 			elif self.order == 2:#file analysis of net graph
 				if self.filetype == '.txt':
 					[net_ct,net_node,net_core,m,n]=self.parent.Config_Setter2.getopt()
@@ -497,6 +507,7 @@ class Main_Window(QtGui.QWidget):
 		# self.qt_ui.pushButton_exefile_1.setEnabled(False)
 		# self.qt_ui.pushButton_exefile_2.setEnabled(False)
 		self.qt_ui.pushButton_tg_show.setEnabled(False)
+		self.qt_ui.pushButton_caculate.setEnabled(False)
 		#line3 file in layout
 		self.set_line3_file_in_layout(False)
 
@@ -599,6 +610,14 @@ class Main_Window(QtGui.QWidget):
 
 		#debug option checked ==> open debug mode
 		self.qt_ui.radioButton_config_op1.toggled.connect(self.activity_set_Debug_Mode)
+
+		#communication file analysised ==> run algorithm button enabled
+		self.qt_ui.textEdit_exestate_1.textChanged.connect(
+			lambda:
+			self.qt_ui.pushButton_caculate.setEnabled(True) 
+			if self.qt_ui.textEdit_exestate_1.toPlainText() == 'Done' 
+			else self.qt_ui.pushButton_caculate.setEnabled(False)
+			)
 
 	@QtCore.Slot()
 	def activity_set_tgt(self):
