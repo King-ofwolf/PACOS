@@ -194,6 +194,11 @@
             <string>.txt</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>Dir</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item>

@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 20:32:56
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-05-26 14:13:32
+# @Last Modified time: 2019-05-26 14:47:04
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -88,12 +88,15 @@ def Load_option(filepath):
 def Load_task_graph_Dir(filepath,filenum):
 	file_out=os.path.join(filepath,"result_file")
 	fmt=[1,1,1,1,1,1]
-	if not os.path.exists(filepath):
+	if not os.path.exists(filepath) or filenum==0:
 		return None
 	if not os.path.exists(file_out):
 		os.mkdir(file_out)
 
-	FileTranslate.main(filepath,filenum,file_out,fmt)
+	result=FileTranslate.main(filepath,filenum,file_out,fmt)
+	if result==0:
+		os.removedirs(file_out)
+		return None
 	return file_out
 
 def Load_task_graph_APHiD(filepath):
