@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-14 16:13:29
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-05-24 16:53:12
+# @Last Modified time: 2019-05-26 08:37:28
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -51,8 +51,9 @@ class TgMatrix(object):
 
 	def commadd(self,x,y,comm):
 		if (x>=self._Tnum) | (y>=self._Tnum):
-			print "Task number",x,y,"are out of index with max number ",self._Tnum
-			return 0
+			errorinfo="Task number %d,%d are out of index with max number %d"%(x,y,self._Tnum)
+			print errorinfo
+			raise Exception(errorinfo)
 		self._commMatrix[x][y]+=comm
 		self._rateMatrix[x][y]+=1
 
@@ -85,7 +86,7 @@ class TgMatrix(object):
 
 	def print_file_mat(self,file_path='./'):
 		if os.path.exists(file_path) & os.path.isdir(file_path) & os.access(file_path,os.W_OK):
-			file_path+="ProcessCommTrace_"+str(self._Tnum)+".mat"
+			file_path=os.path.join(file_path,"ProcessCommTrace_"+str(self._Tnum)+".mat")
 		else:
 			print "output file path",file_path,"is not an enable dir"
 			return None
@@ -105,7 +106,7 @@ class TgMatrix(object):
 
 	def print_file_MPIPP(self,file_path='./'):
 		if os.path.exists(file_path) & os.path.isdir(file_path) & os.access(file_path,os.W_OK):
-			file_path+="ProcessCommTrace_"+str(self._Tnum)+".MPIPP"
+			file_path=os.path.join(file_path,"ProcessCommTrace_"+str(self._Tnum)+".MPIPP")
 		else:
 			print "output file path",file_path,"is not an enable dir"
 			return None
@@ -125,7 +126,7 @@ class TgMatrix(object):
 
 	def print_file_APHiD(self,file_path='./'):
 		if os.path.exists(file_path) & os.path.isdir(file_path) & os.access(file_path,os.W_OK):
-			file_path+="ProcessCommTrace_"+str(self._Tnum)+".APHiD"
+			file_path=os.path.join(file_path,"ProcessCommTrace_"+str(self._Tnum)+".APHiD")
 		else:
 			print "output file path",file_path,"is not an enable dir"
 			return None
@@ -148,7 +149,7 @@ class TgMatrix(object):
 
 	def print_file_TOPO(self,file_path='./'):
 		if os.path.exists(file_path) & os.path.isdir(file_path) & os.access(file_path,os.W_OK):
-			file_path+="ProcessCommTrace_"+str(self._Tnum)+".TOPO"
+			file_path=os.path.join(file_path,"ProcessCommTrace_"+str(self._Tnum)+".TOPO")
 		else:
 			print "output file path",file_path,"is not an enable dir"
 			return None
@@ -171,7 +172,7 @@ class TgMatrix(object):
 
 	def print_file_matrix(self,file_path='./'):
 		if os.path.exists(file_path) & os.path.isdir(file_path) & os.access(file_path,os.W_OK):
-			file_path+="ProcessCommTrace_"+str(self._Tnum)+".matrix"
+			file_path=os.path.join(file_path,"ProcessCommTrace_"+str(self._Tnum)+".matrix")
 		else:
 			print "output file path",file_path,"is not an enable dir"
 			return None
@@ -191,7 +192,7 @@ class TgMatrix(object):
 
 	def print_file_rat(self,file_path='./'):
 		if os.path.exists(file_path) & os.path.isdir(file_path) & os.access(file_path,os.W_OK):
-			file_path+="ProcessCommTrace_"+str(self._Tnum)+".rat"
+			file_path=os.path.join(file_path,"ProcessCommTrace_"+str(self._Tnum)+".rat")
 		else:
 			print "output file path",file_path,"is not an enable dir"
 			return None

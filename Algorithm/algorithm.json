@@ -1,0 +1,17 @@
+{
+	"TreeMatch":{
+		"tgfile":[".mat",".MPIPP"],
+		"ngfile":[".tgt",".xml"],
+		"info":"TreeMatch"
+	},
+	"MPIPP":{
+		"tgfile":[".mat",".MPIPP"],
+		"ngfile":[".tgt",".xml",".txt"],
+		"info":"MPIPP"
+	},
+	"TopoMapping":{
+		"tgfile":[".APHiD",".TOPO"],
+		"ngfile":[".txt"],
+		"info":"TopoMapping进行拓扑映射的思路是首先对任务图进行分析，使用CommProfiler对任务图进行分析并得出任务图通信信息，并使用脚本生成最优的任务通信图作为ParMapper算法的输入，然后根据不同的输入配置要求，生成多个初始输入配置文件，再根据各个不同的配置文件，使用基于贪心的GreedyMap算法，并行计算各个配置条件下的最优映射方案，最后通过统一的量化标准，比较每个配置下生成的最优映射方案，得到全局最优映射方案作为算法的输出方案"
+	}
+}

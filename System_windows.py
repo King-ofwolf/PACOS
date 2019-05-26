@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 15:25:06
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-05-26 06:30:54
+# @Last Modified time: 2019-05-26 14:33:03
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -223,6 +223,7 @@ class Open_File_Browser(QtCore.QObject):
 		self._lineEdit = lineEdit
 		self.setFilepath.connect(self.setlineEdit)
 		self.parent=parent
+		self.available=True
 
 	#save the file path which user choose
 	@property
@@ -247,6 +248,13 @@ class Open_File_Browser(QtCore.QObject):
 		if filename != '':
 			self.last_filepath=filename
 
+class Open_Folder_Browser(Open_File_Browser,QtCore.QObject):
+	@QtCore.Slot()
+	def opendialog(self):
+		filename = QtGui.QFileDialog.getExistingDirectory(self._lineEdit,"Open folder","./")
+		if filename != '':
+			self.last_filepath=filename
+
 class Open_File_Analysis(QtCore.QObject):
 	"""docstring for Open_File_Analysis"""
 	def __init__(self,parent,lineEdit,textEdit,order):
@@ -260,6 +268,8 @@ class Open_File_Analysis(QtCore.QObject):
 
 	def file_exist(self, filepath):
 		if os.path.exists(filepath) & os.path.isfile(filepath) & os.access(filepath,os.R_OK):
+			return True
+		elif os.path.exists(filepath) & os.path.isdir(filepath) & os.access(filepath,os.R_OK) & (self.filetype=="Dir"):
 			return True
 		else:
 			return False
@@ -277,40 +287,36 @@ class Open_File_Analysis(QtCore.QObject):
 
 	@QtCore.Slot()
 	def file_analysis(self):
+		self.get_file_type()
 		if not self.file_exist(self._lineEdit.text()):
 			self._textEdit.setTextColor(QtGui.QColor("red"))
 			self._textEdit.setText("Wrong")
 			msgwindow.msg="file not exists!"
 		else:
-			self.get_file_type()
-			task_size=self.parent.Config_Setter1.getopt()[0]
-			if self.order == 1:#file analysis of task graph
-				if (self.filetype == '.APHiD') | (self.filetype == '.TOPO'):
-					self.retmodule=Algorithm_manage.Load_task_graph_APHiD(self._lineEdit.text())
-					if self.retmodule != None:
-						if self.retmodule.size != task_size or task_size==0:
-							msgwindow.detail="Task number in Task file is %d, but you set it as %d."%(self.retmodule.size,task_size)
-							self.retmodule=None
-				elif (self.filetype == '.mat') | (self.filetype == '.MPIPP'):
-					self.retmodule=Algorithm_manage.Load_task_graph_MAT(self._lineEdit.text())
-					if self.retmodule != None:
-						if len(self.retmodule) != task_size or task_size==0:
-							msgwindow.detail="Task number in Task file is %d, but you set it as %d."%(len(self.retmodule),task_size)
-							self.retmodule=None
-			elif self.order == 2:#file analysis of net graph
-				if self.filetype == '.txt':
+			try:
+				if self.order == 1:#file analysis of task graph
+					task_size=self.parent.Config_Setter1.getopt()[0]
+					[self.retmodule,msgwindow.detail]=Algorithm_manage.Load_task_graph(
+						self._lineEdit.text(),
+						self.filetype,
+						[task_size,])
+				elif self.order == 2:#file analysis of net graph
 					[net_ct,net_node,net_core,m,n]=self.parent.Config_Setter2.getopt()
-					self.retmodule=Algorithm_manage.Load_net_graph_txt(self._lineEdit.text(),net_ct,net_node,net_core)
-				elif self.filetype == '.tgt':
-					self.retmodule=Algorithm_manage.Load_net_graph_tgt(self._lineEdit.text())
-				elif self.filetype == '.xml':
-					self.retmodule=Algorithm_manage.Load_net_graph_xml(self._lineEdit.text())
-			elif self.order == 3:
-				if '.bind' in str(self._lineEdit.text()):
-					self.retmodule=True
-			else:
+					self.retmodule=Algorithm_manage.Load_net_graph(
+						self._lineEdit.text(),
+						self.filetype,
+						[net_ct,net_node,net_core,m,n])
+				elif self.order == 3:
+					self.retmodule=Algorithm_manage.Load_option(self._lineEdit.text())
+				else:
+					self.retmodule=None
+			except Exception as e:
+				msgwindow.exception=e
 				self.retmodule=None
-
+			else:
+				pass
+			finally:
+				pass
 			if self.retmodule==None:
 				self._textEdit.setTextColor(QtGui.QColor("red"))
 				self._textEdit.setText("Wrong")
@@ -452,29 +458,52 @@ class Algorithm_begin(QtCore.QObject):
 		elif self.parent.qt_ui.radioButton_algorithm_3.isChecked():
 			self.algotype=Algorithm_manage.TREEMATCH
 
+
+
 	@QtCore.Slot()
 	def Algorithm_run(self):
 		self.parent.set_waiting()
 		alg_tgfile=str(self.parent.qt_ui.lineEdit_filein_1.text())
 		alg_ngfile=str(self.parent.qt_ui.lineEdit_filein_2.text())
 		alg_cgfile=str(self.parent.qt_ui.lineEdit_filein_3.text())	#algorithm config file
+		alg_tgfile_isdir = self.parent.qt_ui.comboBox_tgfiletype.currentText() == "Dir"
 		try:
 			task_size=self.parent.Config_Setter1.getopt()[0]
 			[net_ct,net_node,net_core,m,n]=self.parent.Config_Setter2.getopt()
 			self.Algorithm_choose()
-
 			if self.algotype == Algorithm_manage.TOPOMAPPING:
-				self.result,runtime,cputime=Algorithm_manage.Algorithm_run(Algorithm_manage.TOPOMAPPING,alg_tgfile,alg_ngfile,task_size=task_size,net_ct=net_ct,net_node=net_node,net_core=net_core)
+				if alg_tgfile_isdir:
+					alg_tgfile=os.path.join(alg_tgfile,"result_file/ProcessCommTrace_"+str(task_size)+".TOPO")
+				self.result,runtime,cputime=Algorithm_manage.Algorithm_run(
+					Algorithm_manage.TOPOMAPPING,alg_tgfile,alg_ngfile,
+					task_size=task_size,
+					net_ct=net_ct,
+					net_node=net_node,
+					net_core=net_core)
 			elif self.algotype == Algorithm_manage.MPIPP:
+				if alg_tgfile_isdir:
+					alg_tgfile=os.path.join(alg_tgfile,"result_file/ProcessCommTrace_"+str(task_size)+".MPIPP")
 				ngfile_type = self.parent.qt_ui.comboBox_ngfiletype.currentText()
-				self.result,runtime,cputime=Algorithm_manage.Algorithm_run(Algorithm_manage.MPIPP,alg_tgfile,alg_ngfile,nfile_type=ngfile_type,ct=net_ct,node=net_node,core=net_core)
+				self.result,runtime,cputime=Algorithm_manage.Algorithm_run(
+					Algorithm_manage.MPIPP,alg_tgfile,alg_ngfile,
+					nfile_type=ngfile_type,
+					ct=net_ct,
+					node=net_node,
+					core=net_core)
 			elif self.algotype == Algorithm_manage.TREEMATCH:
+				if alg_tgfile_isdir:
+					alg_tgfile=os.path.join(alg_tgfile,"result_file/ProcessCommTrace_"+str(task_size)+".mat")
 				ngfile_type = self.parent.qt_ui.comboBox_ngfiletype.currentText()
 				bind_choose = self.parent.qt_ui.radioButton_config_op2.isChecked()
 				bind_file = alg_cgfile if bind_choose else ''
 				optimization = not self.parent.qt_ui.radioButton_config_op3.isChecked()
 				metric=self.parent.qt_ui.comboBox_metric.currentIndex()+1
-				self.result,runtime,cputime=Algorithm_manage.Algorithm_run(Algorithm_manage.TREEMATCH,alg_tgfile,alg_ngfile,nfile_type=ngfile_type,bind_file=bind_file,optimization=optimization,metric=metric)
+				self.result,runtime,cputime=Algorithm_manage.Algorithm_run(
+					Algorithm_manage.TREEMATCH,alg_tgfile,alg_ngfile,
+					nfile_type=ngfile_type,
+					bind_file=bind_file,
+					optimization=optimization,
+					metric=metric)
 
 			self.parent.Result_Show.setResult(self.result,net_ct)
 			self.parent.Result_Show.setAlgorithmmsg(self.algotype,task_size,net_ct,runtime,cputime)
@@ -517,8 +546,11 @@ class Main_Window(QtGui.QWidget):
 		#file input infomation
 		self.qt_ui.textBrowser_filein_msg.setHtml(Language.STR_FILE_INPUT_INFOMATION)
 
-		#algorithm infomathon
-		self.qt_ui.textBrowser_algorithm_msg.setHtml(Language.STR_TOPOMAPPING_INFOMATION)
+		#algorithm infomation
+		self.qt_ui.textBrowser_algorithm_msg.setHtml(
+			Language.QTtextBrowserTranslate(
+				Algorithm_manage.ALGORITHM_INFO[Algorithm_manage.TOPOMAPPING])
+			)
 
 		#slgorithm option setter
 		self.qt_ui.radioButton_config_op2.setVisible(False)
@@ -545,6 +577,7 @@ class Main_Window(QtGui.QWidget):
 	def button_binding(self):
 		#open button in line 1 bind to file browser and line edit 1
 		self.File_Browser1=Open_File_Browser(self,self.qt_ui.lineEdit_filein_1)
+		self.Folder_Browser1=Open_Folder_Browser(self,self.qt_ui.lineEdit_filein_1)
 		self.qt_ui.pushButton_openfile_1.clicked.connect(self.File_Browser1.opendialog)
 		#open button in line 2 bind to file browser and line edit 2
 		self.File_Browser2=Open_File_Browser(self,self.qt_ui.lineEdit_filein_2)
@@ -567,7 +600,7 @@ class Main_Window(QtGui.QWidget):
 		self.qt_ui.pushButton_exefile_1.clicked.connect(self.File_Analysis1.file_analysis)
 
 		self.File_Analysis2=Open_File_Analysis(self,self.qt_ui.lineEdit_filein_2,self.qt_ui.textEdit_exestate_2,2)
-		self.qt_ui.pushButton_exefile_2.clicked.connect(self.File_Analysis2.file_analysis)
+		self.qt_ui.pushButton_exefile_2.clicked.connect(self.activity_Net_file_analysis)
 
 		self.File_Analysis3=Open_File_Analysis(self,self.qt_ui.lineEdit_filein_3,self.qt_ui.textEdit_exestate_3,3)
 		self.qt_ui.pushButton_exefile_3.clicked.connect(self.File_Analysis3.file_analysis)
@@ -595,10 +628,21 @@ class Main_Window(QtGui.QWidget):
 		self.qt_ui.lineEdit_filein_2.textChanged.connect(self.qt_ui.textEdit_exestate_2.clear)
 
 		#file analysis done ==> graph show button enabled
-		self.qt_ui.textEdit_exestate_1.textChanged.connect(lambda:self.qt_ui.pushButton_tg_show.setEnabled(True) if self.qt_ui.textEdit_exestate_1.toPlainText() == 'Done' else 0)
+		self.qt_ui.textEdit_exestate_1.textChanged.connect(
+			lambda:
+			self.qt_ui.pushButton_tg_show.setEnabled(True) 
+			if self.qt_ui.textEdit_exestate_1.toPlainText() == 'Done' 
+			else self.qt_ui.pushButton_tg_show.setEnabled(False)
+			)
+
+		#ngfile type == Dir ==> open file button connected to open folder
+		self.qt_ui.comboBox_tgfiletype.currentIndexChanged.connect(self.activity_set_dir)
 
 		#tgfile type == tgt/xml ==> config window changed to type 2
 		self.qt_ui.comboBox_ngfiletype.currentIndexChanged.connect(self.activity_set_tgt)
+
+		#optimization option changed ==> algorithm recommend change
+		self.qt_ui.comboBox_optimization.currentIndexChanged.connect(self.activity_algorithm_recommend)
 
 		#algorithm changed ==> option setter change
 		self.qt_ui.radioButton_algorithm_1.toggled.connect(self.activity_set_Algorithm_TopoMapping)
@@ -620,6 +664,21 @@ class Main_Window(QtGui.QWidget):
 			)
 
 	@QtCore.Slot()
+	def activity_Net_file_analysis(self):
+		self.File_Analysis2.file_analysis()
+		self.activity_algorithm_recommend()
+
+	@QtCore.Slot()
+	def activity_set_dir(self):
+		if self.qt_ui.comboBox_tgfiletype.currentText() == 'Dir':
+			self.File_Browser1.available=False
+			self.qt_ui.pushButton_openfile_1.clicked.disconnect(self.File_Browser1.opendialog)
+			self.qt_ui.pushButton_openfile_1.clicked.connect(self.Folder_Browser1.opendialog)
+		elif self.File_Browser1.available == False:
+			self.File_Browser1.available=True
+			self.qt_ui.pushButton_openfile_1.clicked.disconnect(self.Folder_Browser1.opendialog)
+			self.qt_ui.pushButton_openfile_1.clicked.connect(self.File_Browser1.opendialog)
+	@QtCore.Slot()
 	def activity_set_tgt(self):
 		if self.qt_ui.comboBox_ngfiletype.currentText() == '.tgt':
 			self.Config_Setter2.changewindow(2)
@@ -636,6 +695,10 @@ class Main_Window(QtGui.QWidget):
 		self.qt_ui.radioButton_config_op4.setVisible(False) 
 		self.qt_ui.comboBox_metric.setVisible(False)
 		self.set_line3_file_in_layout(False)
+		self.qt_ui.textBrowser_algorithm_msg.setHtml(
+			Language.QTtextBrowserTranslate(
+				Algorithm_manage.ALGORITHM_INFO[Algorithm_manage.TOPOMAPPING])
+			)
 	@QtCore.Slot(bool)
 	def activity_set_Algorithm_MPIPP(self,checked):
 		if not checked: return
@@ -644,6 +707,10 @@ class Main_Window(QtGui.QWidget):
 		self.qt_ui.radioButton_config_op4.setVisible(False) 
 		self.qt_ui.comboBox_metric.setVisible(False)
 		self.set_line3_file_in_layout(False)
+		self.qt_ui.textBrowser_algorithm_msg.setHtml(
+			Language.QTtextBrowserTranslate(
+				Algorithm_manage.ALGORITHM_INFO[Algorithm_manage.MPIPP])
+			)
 	@QtCore.Slot(bool)
 	def activity_set_Algorithm_TreeMatch(self,checked):
 		if not checked: return
@@ -659,12 +726,28 @@ class Main_Window(QtGui.QWidget):
 		self.qt_ui.radioButton_config_op4.setToolTip("evaluation metric")
 		if self.qt_ui.radioButton_config_op2.isChecked():
 			self.set_line3_file_in_layout(True)
+		self.qt_ui.textBrowser_algorithm_msg.setHtml(
+			Language.QTtextBrowserTranslate(
+				Algorithm_manage.ALGORITHM_INFO[Algorithm_manage.TREEMATCH])
+			)
 	@QtCore.Slot()
 	def activity_set_Debug_Mode(self):
 		if self.qt_ui.radioButton_config_op1.isChecked():
 			Sys_logger.setLevel(LOG_DEBUG)
 		else :
 			Sys_logger.setLevel(LOG_INFO)
+	@QtCore.Slot()
+	def activity_algorithm_recommend(self):
+		net_file_type=self.qt_ui.comboBox_ngfiletype.currentText()
+		opts=self.qt_ui.comboBox_optimization.currentText()
+		algo=Algorithm_manage.Algorithm_recommend(net_file_type,opts)
+		self.qt_ui.label_algo_recommend.setText(Language.QTLanguageTranslate(Algorithm_manage.ALGORITHM_NAME[algo]))
+		if algo == Algorithm_manage.TREEMATCH:
+			self.qt_ui.radioButton_algorithm_3.setChecked(True)
+		elif algo == Algorithm_manage.MPIPP:
+			self.qt_ui.radioButton_algorithm_2.setChecked(True)
+		elif algo == Algorithm_manage.TOPOMAPPING:
+			self.qt_ui.radioButton_algorithm_1.setChecked(True)
 
 	def set_waiting(self):
 		self.parent.setCursor(QtCore.Qt.WaitCursor)
@@ -678,7 +761,7 @@ class Main_Window(QtGui.QWidget):
 		self.parent.setVisible(flag)
 
 class Window(QtGui.QMainWindow):
-	"""docstring for Window"""
+	"""main window's option menu"""
 	def __init__(self):
 		super(Window, self).__init__()
 		self.option_file='./examples/examples.json'

@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 20:32:56
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-05-23 16:44:18
+# @Last Modified time: 2019-05-26 14:13:32
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -13,10 +13,20 @@ import ctypes
 import os
 import time
 import datetime
+import json
+import codecs
 from Algorithm.TopoMapping import ParMapper
 from Run_log import Sys_logger
 from Graph import TaskGraph
 from Graph import MapGraph
+import FileTranslate
+
+ALGORITHM_INFO=["Unknow",]
+with open(os.path.join('./Algorithm','algorithm.json'), "r") as f:
+	j = json.load(f,encoding="utf-8")
+	ALGORITHM_INFO.append(j["TopoMapping"]["info"])
+	ALGORITHM_INFO.append(j["TreeMatch"]["info"])
+	ALGORITHM_INFO.append(j["MPIPP"]["info"])
 
 TOPOMAPPING=1
 TREEMATCH=2
@@ -30,6 +40,61 @@ TreeMatch_NgFT = (".tgt",".xml")
 
 MPIPP_TgFT = (".mat",".MPIPP")
 MPIPP_NgFT = (".tgt",".txt",".xml")
+
+
+def Load_net_graph(filepath,filetype,opts):
+	filepath=str(filepath)
+	filetype=str(filetype)
+	net_ct=int(opts[0])
+	net_node=int(opts[1])
+	net_core=int(opts[2])
+	if filetype == '.txt':
+		retmodule=Load_net_graph_txt(filepath,net_ct,net_node,net_core)
+	elif filetype == '.tgt':
+		retmodule=Load_net_graph_tgt(filepath)
+	elif filetype == '.xml':
+		retmodule=Load_net_graph_xml(filepath)
+
+	return retmodule
+
+def Load_task_graph(filepath,filetype,opts):
+	filepath=str(filepath)
+	filetype=str(filetype)
+	task_size=int(opts[0])
+	detail=None
+	retmodule=None
+	if (filetype == '.APHiD') | (filetype == '.TOPO'):
+		retmodule=Load_task_graph_APHiD(filepath)
+		if retmodule != None:
+			if retmodule.size != task_size or task_size==0:
+				detail="Task number in Task file is %d, but you set it as %d."%(retmodule.size,task_size)
+				retmodule=None
+	elif (filetype == '.mat') | (filetype == '.MPIPP'):
+		retmodule=Load_task_graph_MAT(filepath)
+		if retmodule != None:
+			if len(retmodule) != task_size or task_size==0:
+				detail="Task number in Task file is %d, but you set it as %d."%(len(retmodule),task_size)
+				retmodule=None
+	elif filetype == 'Dir':
+		retmodule=Load_task_graph_Dir(filepath,task_size)
+
+	return retmodule,detail
+
+def Load_option(filepath):
+	if '.bind' in str(filepath):
+		retmodule=True
+	return retmodule
+
+def Load_task_graph_Dir(filepath,filenum):
+	file_out=os.path.join(filepath,"result_file")
+	fmt=[1,1,1,1,1,1]
+	if not os.path.exists(filepath):
+		return None
+	if not os.path.exists(file_out):
+		os.mkdir(file_out)
+
+	FileTranslate.main(filepath,filenum,file_out,fmt)
+	return file_out
 
 def Load_task_graph_APHiD(filepath):
 	try:
@@ -127,6 +192,10 @@ def Load_result_ST(filepath):
 		pass
 
 def Algorithm_run(algotype,Tgfile,Ngfile,**kw):
+	Tgfile=str(Tgfile)
+	Ngfile=str(Ngfile)
+	if not os.path.exists(Tgfile) or not os.path.exists(Ngfile):
+		raise Exception("file not exists")
 	if algotype == TOPOMAPPING:
 		if "configures" in kw:
 			result,runtime,cputime,Net=Algorithm_run_TopoMapping(Tgfile,Ngfile,kw["task_size"],kw["net_ct"],kw["net_node"],kw["net_core"],kw["configures"])
@@ -259,6 +328,22 @@ def Result_print(result):
 	print("result_S:"+str(ParMapper.S2ST(result)))
 def Result2Str(result):
 	return str(result)
+
+def Algorithm_recommend(ngfile_type,opts):
+	Net_type_tree=[".tgt",".xml"]
+	Net_type_adj=[".txt",]
+	Net_type_other=[]
+	ngfile_type=str(ngfile_type)
+	first=str(opts)
+	if ngfile_type in Net_type_tree:
+		return TREEMATCH
+	elif ngfile_type in Net_type_adj:
+		if first=="performance":
+			return MPIPP
+		elif first=="efficiency":
+			return TOPOMAPPING
+	else:
+		return TOPOMAPPING
 
 
 if __name__ == '__main__':  
