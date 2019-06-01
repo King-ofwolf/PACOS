@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 20:32:56
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-05-26 14:47:04
+# @Last Modified time: 2019-05-28 11:20:23
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -19,6 +19,7 @@ from Algorithm.TopoMapping import ParMapper
 from Run_log import Sys_logger
 from Graph import TaskGraph
 from Graph import MapGraph
+from Graph import NetGraph
 import FileTranslate
 
 ALGORITHM_INFO=["Unknow",]
@@ -135,6 +136,14 @@ def Load_task_graph_MAT(filepath):
 def Load_task_graph_MPIPP(filepath):
 	return Load_task_graph_MAT(filepath)
 
+def net_graph_topo_2_matrix(netgraph):
+	lines_net=str(netgraph).replace(" ","").replace("(","").replace(")","")
+	net_matrix=[]
+	for lines in lines_net.split("\n"):
+		if not lines == "":
+			net_matrix.append(map(int,lines.split(",")))
+	return net_matrix
+
 def Load_net_graph_txt(filepath,ct,node,core):
 	try:
 		#----------------------------------------------temp data
@@ -143,6 +152,7 @@ def Load_net_graph_txt(filepath,ct,node,core):
 		net_ct=ct
 		with open(filepath,'r') as ngf:
 			netgraph=ParMapper.NetGraph(ngf,net_ct,net_node,net_core)
+			NetGraph.GenerateHeatMap(net_graph_topo_2_matrix(netgraph),outpath='./Graph/netgraph.html')
 			return netgraph
 	except Exception as e:
 		Sys_logger.debug(str(e))

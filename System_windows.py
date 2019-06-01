@@ -3,7 +3,7 @@
 # @Author: kingofwolf
 # @Date:   2019-03-10 15:25:06
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-05-26 14:33:03
+# @Last Modified time: 2019-06-01 20:25:42
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
@@ -185,11 +185,14 @@ class ConfigBox_Window(QtGui.QWidget):
 		self.qt_ui.lineEdit_in_5.setText(str(self._options[4]))
 		if self._windows == 0:	#net of .txt config window
 			self.set_option_visible([True,True,True,False,False])
+			self.setWindowTitle(Language.STR_CONFIGWINDOW_TITLE_NET)
 		elif self._windows == 1:	#task config window
 			self.qt_ui.label_cf_1.setText(Language.STR_TOTAL_TASK_NUM)
 			self.set_option_visible([True,False,False,False,False])
+			self.setWindowTitle(Language.STR_CONFIGWINDOW_TITLE_TASK)
 		elif self._windows == 2:	#net of .tgt config window
 			self.set_option_visible([True,False,False,False,False])
+			self.setWindowTitle(Language.STR_CONFIGWINDOW_TITLE_BIND)
 
 		self.parent.setVisible(False)
 		self.show()
@@ -536,6 +539,7 @@ class Main_Window(QtGui.QWidget):
 		# self.qt_ui.pushButton_exefile_1.setEnabled(False)
 		# self.qt_ui.pushButton_exefile_2.setEnabled(False)
 		self.qt_ui.pushButton_tg_show.setEnabled(False)
+		self.qt_ui.pushButton_ng_show.setEnabled(False)
 		self.qt_ui.pushButton_caculate.setEnabled(False)
 		#line3 file in layout
 		self.set_line3_file_in_layout(False)
@@ -606,9 +610,10 @@ class Main_Window(QtGui.QWidget):
 		self.qt_ui.pushButton_exefile_3.clicked.connect(self.File_Analysis3.file_analysis)
 
 		#graph show
-		self.Graph_Show=GraphBox_Window(self)
-		self.qt_ui.pushButton_tg_show.clicked.connect(self.Graph_Show.graphshow)
-		self.qt_ui.pushButton_ng_show.setEnabled(False)
+		self.Task_Graph_Show=GraphBox_Window(self,graphpath='./Graph/taskgraph.html')
+		self.qt_ui.pushButton_tg_show.clicked.connect(self.Task_Graph_Show.graphshow)
+		self.Net_Graph_Show=GraphBox_Window(self,graphpath='./Graph/netgraph.html')
+		self.qt_ui.pushButton_ng_show.clicked.connect(self.Net_Graph_Show.graphshow)
 
 		#algorithm caculate
 		self.Caculate_begin=Algorithm_begin(self,Algorithm_manage.TOPOMAPPING,self.File_Browser3)
@@ -633,6 +638,12 @@ class Main_Window(QtGui.QWidget):
 			self.qt_ui.pushButton_tg_show.setEnabled(True) 
 			if self.qt_ui.textEdit_exestate_1.toPlainText() == 'Done' 
 			else self.qt_ui.pushButton_tg_show.setEnabled(False)
+			)
+		self.qt_ui.textEdit_exestate_2.textChanged.connect(
+			lambda:
+			self.qt_ui.pushButton_ng_show.setEnabled(True)
+			if self.qt_ui.textEdit_exestate_2.toPlainText() == 'Done' and self.qt_ui.comboBox_ngfiletype.currentText() == '.txt'
+			else self.qt_ui.pushButton_ng_show.setEnabled(False)
 			)
 
 		#ngfile type == Dir ==> open file button connected to open folder
