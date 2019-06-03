@@ -62,17 +62,21 @@ python System_windows.py
 [解析状态栏]()|![解析状态栏](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/analysis_done.png)![解析状态栏](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/analysis_wrong.png)
 #### &diams;数据文件输入：
 - 通信拓扑文件输入：
-![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/task_intput_line.png)
-> 1.点击[打开]()按钮，在弹出的文件浏览器中选择所需要输入的文件/在输入框中输入文件的地址
+
+![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/task_input_line.png)
+
+> 1. 点击[打开]()按钮，在弹出的文件浏览器中选择所需要输入的文件/在输入框中输入文件的地址
 > >若需要输入的文件类型为目录结构，则需要将输入框后的[文件类型]()下拉菜单选择为**Dir**
 > 
-> 2.根据输入的文件类型，在[文件类型]()下拉菜单中选择对应的类型
-> 3.点击[配置]()按钮，在弹出的配置窗口中输入对应信息，并点击[确认]()
-- 网络拓扑文件输入：点击[打开]()按钮，在弹出的文件浏览器中选择所需要输入的文件
+> 2. 根据输入的文件类型，在[文件类型]()下拉菜单中选择对应的类型
+> 3. 点击[配置]()按钮，在弹出的配置窗口中输入对应信息，并点击[确认]()
+- 网络拓扑文件输入：
+
 ![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/net_input_line.png)
-> 1.点击[打开]()按钮，在弹出的文件浏览器中选择所需要输入的文件/在输入框中输入文件的地址
-> 2.根据输入的文件类型，在[文件类型]()下拉菜单中选择对应的类型
-> 3.点击[配置]()按钮，在弹出的配置窗口中输入对应信息，并点击[确认]()
+
+> 1. 点击[打开]()按钮，在弹出的文件浏览器中选择所需要输入的文件/在输入框中输入文件的地址
+> 2. 根据输入的文件类型，在[文件类型]()下拉菜单中选择对应的类型
+> 3. 点击[配置]()按钮，在弹出的配置窗口中输入对应信息，并点击[确认]()
 
 #### &diams;文件解析及可视化
 > 点击[文件解析]()按钮，若解析成功，则在[解析状态栏]()显示绿色Done，否则弹出错误提示，并显示红色Wrong
