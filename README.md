@@ -34,6 +34,7 @@ $ cd PACOS
 $ pip install -r requirements.txt
 ```
 **zip源码安装**
+
 在<https://github.com/King-ofwolf/PACOS>的master分支下载源码包，名字为PACOS-master.zip
 ```bash
 $ unzip PACOS-master.zip
