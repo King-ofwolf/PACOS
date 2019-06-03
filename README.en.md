@@ -1,6 +1,6 @@
 # 📃 PACOS
 
-![PACOS](https://github.com/King-ofwolf/PACOS/blob/master/Layout/png/1208066.png)
+![PACOS](Layout/png/1208066.png)
 
 Parallel Application Communication Optimization System based on Topology Mapping
 
@@ -52,26 +52,26 @@ Run this command at the root directory of source code
 $ python System_windows.py
 ```
 to open the system graphical interface
-![graphical interface](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/main.png)
+![graphical interface](Layout/img/main.png)
 
 ### Interface operation mode
 
 Control name | Control graphic
 --------|-------
-[Open]()|![Open](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/open.png)
-[File Type]()|![File Type](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/file_type.png)
-[Configuration]()|![Configuration](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/settings.png)
-[Ensure]()|![Ensure](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/ensure.png)
-[Play]()|![Play](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/play.png)
-[File Parsing]()|![File Parsing](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/file_analysis.png)
-[Parsing State]()|![Parsing State](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/analysis_done.png)![Parsing State](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/analysis_wrong.png)
-[Start Calculation]()|![Start Calculation](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/caculate.png)
+[Open]()|![Open](Layout/img/open.png)
+[File Type]()|![File Type](Layout/img/file_type.png)
+[Configuration]()|![Configuration](Layout/img/settings.png)
+[Ensure]()|![Ensure](Layout/img/ensure.png)
+[Play]()|![Play](Layout/img/play.png)
+[File Parsing]()|![File Parsing](Layout/img/file_analysis.png)
+[Parsing State]()|![Parsing State](Layout/img/analysis_done.png)![Parsing State](Layout/img/analysis_wrong.png)
+[Start Calculation]()|![Start Calculation](Layout/img/caculate.png)
 
 #### &diams;Data file input：
 
 - Communication topology file input：
 
-![graphical interface](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/task_input_line.png)
+![graphical interface](Layout/img/task_input_line.png)
 
 > 1. Click the [Open]() button, select the file you want to enter in the file browser that pops up / enter the address of the file in the input box.
 > >If the file type to be input is the directory structure, you need to select **Dir** from the [File Type]() drop-down menu after the input box.
@@ -81,7 +81,7 @@ Control name | Control graphic
 
 - Network topology file input：
 
-![graphical interface](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/net_input_line.png)
+![graphical interface](Layout/img/net_input_line.png)
 
 > 1. Click the [Open]() button, select the file you want to enter in the file browser that pops up / enter the address of the file in the input box.
 > 2. Select the corresponding type in the [File Type]() drop-down menu depending on the file type entered.
@@ -93,7 +93,7 @@ Control name | Control graphic
 > After the analysis is successful, click the [Play]() button to view the data after the data is visualized.
 > > Network topology diagram currently only supports files in .txt format for visualization
 
-![graphical interface](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/TaskGraph.png)
+![graphical interface](Layout/img/TaskGraph.png)
 
 #### &diams;Algorithm configuration and algorithm recommendation
 
@@ -114,7 +114,7 @@ Although the algorithm recommendation function automatically recommends the algo
 > - Mapping sequence: the first column is the task serial number, and the second column is the node serial number
 > - Visualization: The tree diagram is a network structure. The leaf nodes are nodes 0-n from top to bottom, and the number group on the node is the task sequence number assigned to the current node.
 
-![graphical interface](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/result_show.png)
+![graphical interface](Layout/img/result_show.png)
 
 ### Quick sample data input 
 

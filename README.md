@@ -53,26 +53,26 @@ $ pip install -r requirements.txt
 $ python System_windows.py
 ```
 即可打开系统图形化界面
-![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/main.png)
+![图形化界面](Layout/img/main.png)
 
 ### 界面操作方式
 
 控件名称 | 控件图形
 --------|-------
-[打开]()|![打开](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/open.png)
-[文件类型]()|![文件类型](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/file_type.png)
-[配置]()|![配置](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/settings.png)
-[确认]()|![确认](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/ensure.png)
-[播放]()|![播放](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/play.png)
-[文件解析]()|![文件解析](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/file_analysis.png)
-[解析状态栏]()|![解析状态栏](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/analysis_done.png)![解析状态栏](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/analysis_wrong.png)
-[开始计算]()|![开始计算](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/caculate.png)
+[打开]()|![打开](Layout/img/open.png)
+[文件类型]()|![文件类型](Layout/img/file_type.png)
+[配置]()|![配置](Layout/img/settings.png)
+[确认]()|![确认](Layout/img/ensure.png)
+[播放]()|![播放](Layout/img/play.png)
+[文件解析]()|![文件解析](Layout/img/file_analysis.png)
+[解析状态栏]()|![解析状态栏](Layout/img/analysis_done.png)![解析状态栏](Layout/img/analysis_wrong.png)
+[开始计算]()|![开始计算](Layout/img/caculate.png)
 
 #### &diams;数据文件输入：
 
 - 通信拓扑文件输入：
 
-![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/task_input_line.png)
+![图形化界面](Layout/img/task_input_line.png)
 
 > 1. 点击[打开]()按钮，在弹出的文件浏览器中选择所需要输入的文件/在输入框中输入文件的地址
 > >若需要输入的文件类型为目录结构，则需要将输入框后的[文件类型]()下拉菜单选择为**Dir**
@@ -82,7 +82,7 @@ $ python System_windows.py
 
 - 网络拓扑文件输入：
 
-![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/net_input_line.png)
+![图形化界面](Layout/img/net_input_line.png)
 
 > 1. 点击[打开]()按钮，在弹出的文件浏览器中选择所需要输入的文件/在输入框中输入文件的地址
 > 2. 根据输入的文件类型，在[文件类型]()下拉菜单中选择对应的类型
@@ -94,7 +94,7 @@ $ python System_windows.py
 > 解析成功后，点击[播放]()按钮，则可查看数据可视化后的图形
 > > 网络拓扑图目前只支持.txt格式的文件进行可视化
 
-![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/TaskGraph.png)
+![图形化界面](Layout/img/TaskGraph.png)
 
 #### &diams;算法配置及算法推荐
 
@@ -115,7 +115,7 @@ $ python System_windows.py
 > - 映射序列：第一列为任务序列号，第二列为节点序列号
 > - 可视化图形：树状图为网络结构，叶子节点从上至下依次为0-n号节点，节点上的数字组为分配到当前节点的任务序列号
 
-![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/result_show.png)
+![图形化界面](Layout/img/result_show.png)
 
 ### 快捷样例数据输入 
 
