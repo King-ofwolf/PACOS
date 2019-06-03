@@ -55,11 +55,12 @@ python System_windows.py
 --------|-------
 [打开]()|![打开](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/open.png)
 [文件类型]()|![文件类型](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/file_type.png)
-[配置]()|![配置](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/setting.png)
+[配置]()|![配置](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/settings.png)
 [确认]()|![确认](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/ensure.png)
 [播放]()|![播放](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/play.png)
 [文件解析]()|![文件解析](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/file_analysis.png)
 [解析状态栏]()|![解析状态栏](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/analysis_done.png)![解析状态栏](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/analysis_wrong.png)
+[开始计算]()|![开始计算](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/caculate.png)
 #### &diams;数据文件输入：
 - 通信拓扑文件输入：
 
@@ -103,7 +104,7 @@ python System_windows.py
 
 ![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/result_show.png)
 ### 快捷样例数据输入
-为方便开发测试，在系统的菜单栏中添加了[example]()菜单，点击选择对应的算法和对应的样例即可完成所有相应的配置项，直接点击两个[文件解析]()按钮，完成解析后，即可点击[开始计算]()按钮，进行算法计算。
+为方便开发测试，在系统的菜单栏中添加了[样例]()菜单，点击选择对应的算法和对应的样例即可完成所有相应的配置项，直接点击两个[文件解析]()按钮，完成解析后，即可点击[开始计算]()按钮，进行算法计算。
 
 ## 🔖 样例数据
 
