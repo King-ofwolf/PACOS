@@ -2,6 +2,7 @@
 
 # 📃 PACOS
 ![PACOS](https://github.com/King-ofwolf/PACOS/blob/master/Layout/png/1208066.png)
+
 基于拓扑映射的并行应用通信性能优化系统
 *(Parallel Application Communication Optimization System based on Topology Maping)*
 
@@ -48,15 +49,27 @@ $ pip install -r requirements.txt
 python System_windows.py
 ```
 即可打开系统图形化界面
+![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/main.png)
 ### 界面操作方式
+控件名称 | 控件图形
+--------|-------
+[打开]()|![打开](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/open.png)
+[文件类型]()|![文件类型](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/file_type.png)
+[配置]()|![配置](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/setting.png)
+[确认]()|![确认](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/ensure.png)
+[播放]()|![播放](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/play.png)
+[文件解析]()|![文件解析](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/file_analysis.png)
+[解析状态栏]()|![解析状态栏](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/analysis_done.png)![解析状态栏](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/analysis_wrong.png)
 #### &diams;数据文件输入：
 - 通信拓扑文件输入：
+![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/task_intput_line.png)
 > 1.点击[打开]()按钮，在弹出的文件浏览器中选择所需要输入的文件/在输入框中输入文件的地址
 > >若需要输入的文件类型为目录结构，则需要将输入框后的[文件类型]()下拉菜单选择为**Dir**
 > 
 > 2.根据输入的文件类型，在[文件类型]()下拉菜单中选择对应的类型
 > 3.点击[配置]()按钮，在弹出的配置窗口中输入对应信息，并点击[确认]()
 - 网络拓扑文件输入：点击[打开]()按钮，在弹出的文件浏览器中选择所需要输入的文件
+![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/net_input_line.png)
 > 1.点击[打开]()按钮，在弹出的文件浏览器中选择所需要输入的文件/在输入框中输入文件的地址
 > 2.根据输入的文件类型，在[文件类型]()下拉菜单中选择对应的类型
 > 3.点击[配置]()按钮，在弹出的配置窗口中输入对应信息，并点击[确认]()
@@ -65,6 +78,8 @@ python System_windows.py
 > 点击[文件解析]()按钮，若解析成功，则在[解析状态栏]()显示绿色Done，否则弹出错误提示，并显示红色Wrong
 > 解析成功后，点击[播放]()按钮，则可查看数据可视化后的图形
 > > 网络拓扑图目前只支持.txt格式的文件进行可视化
+
+![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/TaskGraph.png)
 #### &diams;算法配置及算法推荐
 文件输入及配置完成并解析成功后，即可进行算法的配置。配置完成后将自动推荐算法，并勾选被推荐的算法。
 > [优化选项]():决定算法推荐，performance为优先性能，efficiency为优先效率
@@ -81,6 +96,8 @@ python System_windows.py
 > - 散点图：横坐标为任务序列号，纵坐标为节点序列号
 > - 映射序列：第一列为任务序列号，第二列为节点序列号
 > - 可视化图形：树状图为网络结构，叶子节点从上至下依次为0-n号节点，节点上的数字组为分配到当前节点的任务序列号
+
+![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/result_show.png)
 ### 快捷样例数据输入
 为方便开发测试，在系统的菜单栏中添加了[example]()菜单，点击选择对应的算法和对应的样例即可完成所有相应的配置项，直接点击两个[文件解析]()按钮，完成解析后，即可点击[开始计算]()按钮，进行算法计算。
 
