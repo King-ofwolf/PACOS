@@ -86,13 +86,13 @@ python System_windows.py
 ![图形化界面](https://github.com/King-ofwolf/PACOS/blob/master/Layout/img/TaskGraph.png)
 #### &diams;算法配置及算法推荐
 文件输入及配置完成并解析成功后，即可进行算法的配置。配置完成后将自动推荐算法，并勾选被推荐的算法。
-> [优化选项]():决定算法推荐，performance为优先性能，efficiency为优先效率
-> [Debug Mode]():勾选则开启系统调试模式，调试信息将输出到log文件中
+> - [优化选项]():决定算法推荐，performance为优先性能，efficiency为优先效率
+> - [Debug Mode]():勾选则开启系统调试模式，调试信息将输出到log文件中
 
 若选中的算法是TreeMatch算法，则相应有以下配置项
-> [-b]() 绑定文件（binding constraint file）
-> [-d]() 取消拓扑优化 （disable topology optimization）
-> [-m]() 优化目标 （evaluation metric）在下拉菜单中选择对应优化目标(SUM_COM/MAX_COM/HOP_BYTE)
+> - [-b]() 绑定文件（binding constraint file）
+> - [-d]() 取消拓扑优化 （disable topology optimization）
+> - [-m]() 优化目标 （evaluation metric）在下拉菜单中选择对应优化目标(SUM_COM/MAX_COM/HOP_BYTE)
 
 #### &diams;算法计算及结果展示
 虽然算法推荐功能会根据网络结构和用户选择的优化选项自动推荐算法并选择对应算法，但用户仍然可以勾选其他算法。点击[开始计算]()，则系统将根据输入的数据和参数进行算法计算，计算过程中系统为不可用状态，待计算结束后，将弹出结果展示界面。
