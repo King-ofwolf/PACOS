@@ -6,7 +6,9 @@
 *(Parallel Application Communication Optimization System based on Topology Mapping)*
 
 网站：<https://king-ofwolf.github.io/PACOS>
+
 Github 地址: <https://github.com/King-ofwolf/PACOS>
+
 作者：汪圣灵
 
 [English README](README.en.md)
@@ -39,6 +41,8 @@ $ pip install -r requirements.txt
 **zip源码安装**
 
 在<https://github.com/King-ofwolf/PACOS>的master分支下载源码包，名字为PACOS-master.zip
+
+或者[点击下载](https://github.com/King-ofwolf/PACOS/archive/master.zip)
 ```bash
 $ unzip PACOS-master.zip
 $ cd PACOS-master
