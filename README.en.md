@@ -2,7 +2,7 @@
 
 ![PACOS](https://github.com/King-ofwolf/PACOS/blob/master/Layout/png/1208066.png)
 
-Parallel Application Communication Optimization System based on Topology Maping
+Parallel Application Communication Optimization System based on Topology Mapping
 
 Github Address: <https://github.com/King-ofwolf/PACOS>
 Author：Wang Shengling

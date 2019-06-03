@@ -3,7 +3,7 @@
 ![PACOS](https://github.com/King-ofwolf/PACOS/blob/master/Layout/png/1208066.png)
 
 基于拓扑映射的并行应用通信性能优化系统
-*(Parallel Application Communication Optimization System based on Topology Maping)*
+*(Parallel Application Communication Optimization System based on Topology Mapping)*
 
 Github 地址: <https://github.com/King-ofwolf/PACOS>
 作者：汪圣灵
