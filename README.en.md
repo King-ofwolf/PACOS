@@ -90,7 +90,7 @@ Control name | Control graphic
 
 > 1. Click the [Open]()![(Open.png)] button, select the file you want to enter in the file browser that pops up / enter the address of the file in the input box.
 > 2. Select the corresponding type in the [File Type]()![(File Type.png)] drop-down menu depending on the file type entered.
-> 3. Click the [Configuration]()![(Configuration.png)] button, enter the corresponding information in the pop-up configuration window, and click [OK]()
+> 3. Click the [Configuration]()![(Configuration.png)] button, enter the corresponding information in the pop-up configuration window, and click [Ensure]()![(Ensure.png)]
 
 #### &diams;File parsing and visualization
 
