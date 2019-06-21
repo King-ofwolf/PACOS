@@ -7,7 +7,7 @@ PyQt_package_link := https://jaist.dl.sourceforge.net/project/pyqt/PyQt4/PyQt-4.
 PyQt_package := PyQt4_gpl_x11-4.12.3.tar.gz
 
 Log_file : 
-	mkdir $(srcdir)debug_log
+	-mkdir $(srcdir)debug_log 2>null 
 	
 Layout_make : 
 	$(MAKE) -C $(srcdir)Layout/
