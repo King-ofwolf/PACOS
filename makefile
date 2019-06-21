@@ -15,9 +15,5 @@ MPIPP_make :
 .PHONY : install
 install :
 	sudo apt-get update
-	sudo apt-get install qt4-dev-tools qt4-doc qt4-qtconfig qt4-demos qt4-designer libqwt5-qt4 libqwt5-qt4-dev
-	sudo apt-get install libxext6 libxext-dev libqt4-dev libqt4-sql
-	sudo apt-get install python-qt4
-	sudo apt-get install python-qt4-*
-	sudo apt-get install python-qscintilla2
+	sudo apt-get install qt4-dev-tools qt4-doc qt4-qtconfig qt4-demos qt4-designer libqwt5-qt4 libqwt5-qt4-dev libxext6 libxext-dev libqt4-dev libqt4-sql python-qt4 python-qt4-* python-qscintilla2 
 	sudo pip2 install -r requirements.txt
