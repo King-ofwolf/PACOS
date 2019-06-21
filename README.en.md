@@ -52,7 +52,10 @@ $ make install
 ## 📝 Usage
 
 ### Local Environment and Startup Method
-> python 2.7
+> - python 2.7
+> - hwloc 1.3 or later
+> - Please ensure your PC has installed the lib of hwloc and treematch. For more detals, check [TreeMatch]
+> 
 
 Run this command at the root directory of source code 
 ```bash
