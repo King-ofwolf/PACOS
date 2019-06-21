@@ -1,4 +1,4 @@
-all : Layout_make MPIPP_make
+all : Layout_make MPIPP_make Log_file
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 srcdir := $(dir $(mkfile_path))
@@ -6,6 +6,9 @@ srcdir := $(dir $(mkfile_path))
 PyQt_package_link := https://jaist.dl.sourceforge.net/project/pyqt/PyQt4/PyQt-4.12.3/PyQt4_gpl_x11-4.12.3.tar.gz
 PyQt_package := PyQt4_gpl_x11-4.12.3.tar.gz
 
+Log_file : 
+	mkdir $(srcdir)debug_log
+	
 Layout_make : 
 	$(MAKE) -C $(srcdir)Layout/
 
