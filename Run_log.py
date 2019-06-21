@@ -18,7 +18,6 @@ LOG_INFO=logging.INFO
 SYSWORD_DIR=os.getcwd()
 RUNLOG_DIR=os.path.join(SYSWORD_DIR,"debug_log/")
 LOG_FILE=os.path.join(RUNLOG_DIR,"System.log")
-os.mkdir(RUNLOG_DIR)
 logging.basicConfig(level=logging.INFO,
 					format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
 					datefmt='%a, %d %b %Y %H:%M:%S',
