@@ -36,8 +36,8 @@ Github 地址: <https://github.com/King-ofwolf/PACOS>
 ```bash
 $ git clone https://github.com/King-ofwolf/PACOS.git
 $ cd PACOS
-$ sudo apt-get install qt4-dev-tools qt4-doc qt4-qtconfig qt4-demos qt4-designer libqwt5-qt4 libqwt5-qt4-dev
-$ sudo pip2 install -r requirements.txt
+$ make
+$ make install
 ```
 **zip源码安装**
 
@@ -47,8 +47,8 @@ $ sudo pip2 install -r requirements.txt
 ```bash
 $ unzip PACOS-master.zip
 $ cd PACOS-master
-$ sudo apt-get install qt4-dev-tools qt4-doc qt4-qtconfig qt4-demos qt4-designer libqwt5-qt4 libqwt5-qt4-dev
-$ sudo pip2 install -r requirements.txt
+$ make
+$ make install
 ```
 ## 📝 使用
 
