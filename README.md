@@ -54,6 +54,8 @@ $ make install
 
 ### 本地环境及启动方式
 > python 2.7
+> hwloc 1.3 or later
+> 在使用之前请确认安装了hwloc以及treeMatch的lib，详情参考[TreeMatch]
 > 
 在源码目录下，运行命令：
 ```bash
