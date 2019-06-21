@@ -3,13 +3,13 @@
 # @Author: kingofwolf
 # @Date:   2019-03-17 17:13:49
 # @Last Modified by:   kingofwolf
-# @Last Modified time: 2019-05-28 09:58:04
+# @Last Modified time: 2019-06-21 11:45:27
 # @Email:	wangshenglingQQ@163.com
 'Info: a Python file '
 __author__ = 'Wang'
 __version__= '2019-03-17 17:13:49'
 
-from PySide import QtGui
+from PyQt4 import QtGui
 def QTLanguageTranslate(chinesestr):
 	return QtGui.QApplication.translate("Form", chinesestr, None, QtGui.QApplication.UnicodeUTF8)
 
